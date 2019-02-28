@@ -1,0 +1,47 @@
+<grid [values]=rawMaterialDTOs [options]=options></grid>
+<hr />
+<!-- <p-table [value]="rawMaterialDTOs">
+  <ng-template pTemplate="header">
+    <tr>
+      <th colspan="4"> Raw Material <button class="btn btn-success" type="button" (click)="showDialog()">New</button>
+      </th>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Unit</th>
+      <th>Action</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rawMaterialDTO>
+    <tr>
+      <td>{{rawMaterialDTO.name}}</td>
+      <td>{{rawMaterialDTO.type}}</td>
+      <td>{{rawMaterialDTO.unit}}</td>
+      <td> <button pButton type="button" label="Edit" (click)="edit(rawMaterialDTO)"></button> <button pButton type="button"
+          label="Delete" (click)="delete(rawMaterialDTO.id)"></button> </td>
+    </tr>
+  </ng-template>
+</p-table>
+<p-dialog [(visible)]="display" [width]="300">
+  <p-header>Project</p-header>
+  <div class="form-group" [formGroup]="formGroup">
+    <div class="form-row"> <input type="hidden" formControlName="id" class="form-control">
+      <div class="col">
+        <div class="form-group"> <label>Unit</label>
+          <p-dropdown formControlName="unit" [options]="unitTypes" [style]="{'width':'100%'}"></p-dropdown>
+          <div class="text-muted" *ngIf="unit.invalid && unit.touched">Unit is required. </div>
+        </div>
+        <div class="form-group"> <label>Type</label>
+          <p-dropdown formControlName="type" [options]="rawMaterialTypes" [style]="{'width':'100%'}"></p-dropdown>
+          <div class="text-muted" *ngIf="type.invalid && type.touched">Type is required. </div>
+        </div>
+        <div class="form-group"> <label>Name</label> <input formControlName="name" class="form-control">
+          <div class="text-muted" *ngIf="name.invalid && name.touched">Name is required. </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-footer><button class="btn btn-success" type="button" [disabled]="formGroup.invalid" (click)="save()">Save</button>
+    <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button></p-footer>
+</p-dialog> -->

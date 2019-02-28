@@ -1,0 +1,51 @@
+<div class="form-group" [formGroup]="formGroup">
+  <div class="form-row">
+    <div class="col">
+      <div class="form-group"> <label>Customer Name</label> <input formControlName="customerName" class="form-control">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group"> <label>Street Address</label> <input formControlName="streetaddress" class="form-control">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group"> <label>City</label> <input formControlName="city" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row"> 
+    <div class="col">
+      <div class="form-group"> <label>District</label> <input formControlName="district" class="form-control">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group"> <label>State</label> <input formControlName="state" class="form-control">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group"> <label>Country</label> <input formControlName="country" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col">
+      <div class="form-group"> <label>Pincode</label> <input formControlName="pincode" class="form-control">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group"> <label>Emp Name</label> <input formControlName="empname" class="form-control">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group"> <label>Designation</label> <input formControlName="designation" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <button class="btn btn-success" type="button" (click)="generatepdf()">Generate</button> 
+    <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
+  </div>
+</div>
