@@ -1,20 +1,6 @@
-<p-table #grid [value]="values" [paginator]="false" [rows]="10" dataKey="id" [(selection)]="selectedValues" autoLayout="true"
-  [lazy]="true" (onLazyLoad)="lazyLoad($event)" [responsive]="true" (onchange)="changevalue($event)">
-  <ng-template pTemplate="caption">
-    <div class="clearfix">
-      <h5 class="float-left">
-        {{options.caption}}
-      </h5>
-      <span class="float-right">
-        <button class="btn btn-sm btn-default" type="button" (click)="exportDialog()">
-          <i class="pi pi-download"></i>
-        </button>
-        <button class="btn btn-sm btn-success" type="button" (click)="add()">
-          <i class="pi pi-plus">Add</i>
-        </button>
-      </span>
-    </div>
-  </ng-template>
+<p-table #grid [value]="values" [paginator]="false" [rows]="10" dataKey="id" [(selection)]="selectedValues"
+  autoLayout="true" [lazy]="true" (onLazyLoad)="lazyLoad($event)" [responsive]="true" (onchange)="changevalue($event)">
+  <ng-container *ngTemplateOutlet="caption"> </ng-container>
   <ng-template pTemplate="header">
     <tr>
       <th style="width: 2.25em">
@@ -49,9 +35,10 @@
         <ng-template #normalMode>
           <div [ngSwitch]="column.type">
             <span *ngSwitchCase="'date'">date</span>
-            <p-checkbox *ngSwitchCase="'checkBox'" [ngModel]="getValue(rowData,column.index)" disabled="true" binary="true"></p-checkbox>
-            <p-dropdown *ngSwitchCase="'select'" [ngModel]="getValue(rowData,column.index)" [options]="column.selectOptions"
-              [style]="{'width':'100%'}" appendTo="body" autoWidth="false" [disabled]="true"></p-dropdown>
+            <p-checkbox *ngSwitchCase="'checkBox'" [ngModel]="getValue(rowData,column.index)" disabled="true"
+              binary="true"></p-checkbox>
+            <!-- <p-dropdown *ngSwitchCase="'select'" [ngModel]="getValue(rowData,column.index)" [options]="column.selectOptions"
+              [style]="{'width':'100%'}" appendTo="body" autoWidth="false" [disabled]="true"></p-dropdown> -->
             <span *ngSwitchDefault> {{getValue(rowData,column.index)}} </span>
           </div>
         </ng-template>
@@ -74,8 +61,8 @@
   </ng-template>
   <ng-template pTemplate="summary">
     <div class="clearfix">
-      <p-paginator rows="10" totalRecords="100" pageLinkSize="3" (onPageChange)="paginate($event)" [rowsPerPageOptions]="[10,20,30]"
-        alwaysShow="false" class="float-left" dropdownAppendTo="body"></p-paginator>
+      <p-paginator rows="10" totalRecords="100" pageLinkSize="3" (onPageChange)="paginate($event)"
+        [rowsPerPageOptions]="[10,20,30]" alwaysShow="false" class="float-left" dropdownAppendTo="body"></p-paginator>
       <span class="float-right">
         <button class="btn btn-sm btn-success" type="button" (click)="save()">
           <i class="pi pi-save">Save</i>
@@ -108,7 +95,8 @@
           <p-radioButton name="selectionGroup" value="all" label="All" [(ngModel)]="exportData"></p-radioButton>
         </div>
         <div class="col-5">
-          <p-radioButton name="selectionGroup" value="selected" label="Selected" [(ngModel)]="exportData"></p-radioButton>
+          <p-radioButton name="selectionGroup" value="selected" label="Selected" [(ngModel)]="exportData">
+          </p-radioButton>
         </div>
       </div>
     </div>
@@ -118,3 +106,20 @@
     <button type="text" (click)="closeExportDialog()" pButton icon="pi pi-info-circle" label="Cancel"></button>
   </p-footer>
 </p-dialog>
+
+
+<ng-template #caption pTemplate="caption">
+  <div class="clearfix">
+    <h5 class="float-left">
+      lkdlkdsldskldskldslkds {{options.caption}}
+    </h5>
+    <span class="float-right">
+      <button class="btn btn-sm btn-default" type="button" (click)="exportDialog()">
+        <i class="pi pi-download"></i>
+      </button>
+      <button class="btn btn-sm btn-success" type="button" (click)="add()">
+        <i class="pi pi-plus">Add</i>
+      </button>
+    </span>
+  </div>
+</ng-template>
