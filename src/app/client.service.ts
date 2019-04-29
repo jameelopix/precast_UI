@@ -48,11 +48,19 @@ export class ClientService {
 
   constructor(private http: HttpClient) { }
 
-  post(url, request, callback) {
+  post(url, request, successCallback, errorCallback?) {
     this.http.post(this.baseUrl + url, request, this.httpOptions).subscribe((response: any) => {
-      callback(response);
-    });
-    return this.http.post(this.baseUrl + url, request, this.httpOptions);
+      successCallback(response);
+    },
+      (response: any) => {
+        if (errorCallback) {
+          errorCallback(response['error']['errorDTOs']);
+        }
+      },
+      () => {
+        console.log("POST Completed!!!");
+      });
+    // return this.http.post(this.baseUrl + url, request, this.httpOptions);
   }
 
   downloadFile(url, request) {

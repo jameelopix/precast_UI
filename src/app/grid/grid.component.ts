@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Table } from 'primeng/components/table/table';
 import { MESSAGES } from '../model/messages';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { MenuItem } from 'primeng/components/common/menuitem';
 
 @Component({
   selector: 'grid',
@@ -13,12 +14,23 @@ export class GridComponent implements OnInit {
   @ViewChild(Table) tableComponent: Table;
 
   @Input()
-  values: any = [];
+  parentValue: any = null;
+
+  @Input()
+  values: any[] = [];
+
+  @Input()
+  messages: any[] = [];
+
+  @Input()
+  childvalue1: any[] = [];
 
   selectedValues: any[] = [];
 
   @Input()
   options: any = {};
+
+  ctx = { caption: this.options.caption };
 
   editState: boolean = false;
 
@@ -28,6 +40,8 @@ export class GridComponent implements OnInit {
 
   exportData: string = null;
   fileName: string = null;
+
+  items: MenuItem[];
 
   private readonly rowDataEditMode: string = "editMode";
 
@@ -47,19 +61,62 @@ export class GridComponent implements OnInit {
       this.rowDataFormGroup.addControl(element["model"], new FormControl(''));
     });
 
+    //   this.items = [{
+    //     label: 'Issue',
+    //     command: this.issueCommand
+    //   },
+    //   {
+    //     label: 'Close',
+    //     command: this.closeCommand
+    //   }];
+  }
+
+  getActions(options, rowData): MenuItem[] {
+    let value = rowData;
+
+    let menuItems: MenuItem[] = [];
+    options.actions.forEach(element => {
+      let menuItem: MenuItem = {};
+      menuItem.label = element.label;
+      menuItem.icon = element.icon;
+      menuItem.command = e => element.action(value, this.parentValue);
+
+      menuItems.push(menuItem);
+    });
+
+    return menuItems;
+  }
+
+  // getActions1(options, rowData) {
+  //   options.actions.forEach(element => {
+  //     element.command = (event, rowData) => {
+  //       element.fun(rowData);
+  //       // console.log("element.command(rowData)");
+  //     }
+  //   });
+
+  //   return options.actions;
+  // }
+
+  issueCommand(event) {
+    console.log("issueCommand" + event);
+  }
+
+  closeCommand(event) {
+    console.log("closeCommand" + event);
   }
 
   lazyLoad(event) {
     console.log("Inside lazyLoad function.");
     console.table({ event });
-    this.options.getCallback();
+    this.options.getCallback(this.parentValue);
     console.log("-----------------------");
   }
 
   paginate(event) {
     console.log("Inside paginate function.");
     console.table({ event });
-    this.options.getCallback();
+    this.options.getCallback(this.parentValue);
     console.log("-----------------------");
   }
 
@@ -68,8 +125,6 @@ export class GridComponent implements OnInit {
     console.table({ event });
     console.log("-----------------------");
   }
-
-
 
   getNgModel(rowData: any, column: any) {
     let model = column["model"];
@@ -88,12 +143,16 @@ export class GridComponent implements OnInit {
     return obj;
   }
 
-  private getValue(rowData: any, index: string) {
+  private getValue(rowData: any, index: string, type?: string) {
     let values = index.split(".");
     let output = rowData;
     values.forEach(element => {
       output = output[element];
     });
+    // console.table(output);
+    // if ('date' == type) {
+    //   output = new Date(output);
+    // }
     return output;
   }
 
@@ -133,6 +192,10 @@ export class GridComponent implements OnInit {
     this.closeExportDialog();
   }
 
+  getTableValue(options) {
+    return options.values;
+  }
+
   save() {
     console.log("Inside save function." + this.rowDataFormGroup.value);
     let value = this.selectedValues[0];
@@ -146,7 +209,7 @@ export class GridComponent implements OnInit {
     let clonedValue = this.deepClone(value);
     delete clonedValue[this.rowDataEditMode];
 
-    this.options.saveCallback(clonedValue);
+    this.options.saveCallback(clonedValue, this.parentValue);
     this.editState = false;
     this.clearSelection();
   }
@@ -194,7 +257,7 @@ export class GridComponent implements OnInit {
     this.tableComponent.reset();
     this.editState = false;
     this.clearSelection();
-    this.options.getCallback();
+    this.options.getCallback(this.parentValue);
   }
 
   edit(value: any) {
@@ -206,7 +269,11 @@ export class GridComponent implements OnInit {
     let inputValues = {};
     this.options["columns"].forEach(element => {
       let key = element["model"];
-      inputValues[key] = value[key];
+      if ("date" == element['type']) {
+        inputValues[key] = new Date(value[key]);
+      } else {
+        inputValues[key] = value[key];
+      }
     });
 
     this.rowDataFormGroup.setValue(inputValues)
@@ -214,12 +281,30 @@ export class GridComponent implements OnInit {
     this.editState = true;
   }
 
+  getColSpan_emptyMsg(options) {
+    let len = options.columns.length + 2;
+    if (options.childGridOptions) {
+      len++;
+    }
+    return len;
+  }
+
+  getColSpan_childTable(options) {
+    let len = options.columns.length + 1;
+    if (options.childGridOptions) {
+      len++;
+    }
+    return len;
+  }
+
+
+
   delete(value: any) {
     console.log("Inside delete function.");
     console.table(value);
 
     if (window.confirm(MESSAGES.DELETE_CONFIRM_MSG)) {
-      this.options.deleteCallback(value.id);
+      this.options.deleteCallback(value.id, this.parentValue);
       this.editState = false;
     }
   }

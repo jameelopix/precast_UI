@@ -9,6 +9,8 @@ import { LoginComponent } from './login/login.component';
 import { ReportComponent } from './report/report.component';
 import { CompanyComponent } from './company/company.component';
 import { BankAccountComponent } from './bank-account/bank-account.component';
+import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
+import { AccountDetailsComponent } from './account-details/account-details.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -20,6 +22,8 @@ const routes: Routes = [
   { path: 'report', component: ReportComponent },
   { path: 'company', component: CompanyComponent },
   { path: 'bankaccount', component: BankAccountComponent },
+  { path: 'purchaseorder', component: PurchaseOrderComponent },
+  { path: 'accountdetails', component: AccountDetailsComponent },
   { path: '**', component: LoginComponent },
   // ,
   // { path: 'elementdetailspage', component: ElementDetailsComponent },

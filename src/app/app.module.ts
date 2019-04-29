@@ -21,6 +21,10 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { TreeTableModule } from 'primeng/treetable';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { MenubarModule } from 'primeng/menubar';
+import { CalendarModule } from 'primeng/calendar';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 
 import { MixdesignComponent } from './mixdesign/mixdesign.component';
 import { ProjectComponent } from './project/project.component';
@@ -35,6 +39,8 @@ import { ReportComponent } from './report/report.component';
 import { CompanyComponent } from './company/company.component';
 import { BankAccountComponent } from './bank-account/bank-account.component';
 import { CashTransferComponent } from './cash-transfer/cash-transfer.component';
+import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
+import { AccountDetailsComponent } from './account-details/account-details.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +58,9 @@ import { CashTransferComponent } from './cash-transfer/cash-transfer.component';
     ReportComponent,
     CompanyComponent,
     BankAccountComponent,
-    CashTransferComponent
+    CashTransferComponent,
+    PurchaseOrderComponent,
+    AccountDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -70,7 +78,11 @@ import { CashTransferComponent } from './cash-transfer/cash-transfer.component';
     InputTextModule,
     HttpClientModule,
     TreeTableModule,
-    MultiSelectModule
+    MultiSelectModule,
+    MenubarModule,
+    CalendarModule,
+    MessagesModule,
+    MessageModule
   ],
   providers: [ClientService],
   bootstrap: [AppComponent]
