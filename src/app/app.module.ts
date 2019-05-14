@@ -41,6 +41,8 @@ import { BankAccountComponent } from './bank-account/bank-account.component';
 import { CashTransferComponent } from './cash-transfer/cash-transfer.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { AccountDetailsComponent } from './account-details/account-details.component';
+import { ColiseumGridComponent } from './coliseum-grid/coliseum-grid.component';
+import { PurchaseRegisterComponent } from './purchase-register/purchase-register.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +62,9 @@ import { AccountDetailsComponent } from './account-details/account-details.compo
     BankAccountComponent,
     CashTransferComponent,
     PurchaseOrderComponent,
-    AccountDetailsComponent
+    AccountDetailsComponent,
+    ColiseumGridComponent,
+    PurchaseRegisterComponent
   ],
   imports: [
     BrowserModule,

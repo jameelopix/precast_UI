@@ -11,6 +11,7 @@ import { CompanyComponent } from './company/company.component';
 import { BankAccountComponent } from './bank-account/bank-account.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { AccountDetailsComponent } from './account-details/account-details.component';
+import { PurchaseRegisterComponent } from './purchase-register/purchase-register.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'company', component: CompanyComponent },
   { path: 'bankaccount', component: BankAccountComponent },
   { path: 'purchaseorder', component: PurchaseOrderComponent },
+  { path: 'purchaseregister', component: PurchaseRegisterComponent },
   { path: 'accountdetails', component: AccountDetailsComponent },
   { path: '**', component: LoginComponent },
   // ,
