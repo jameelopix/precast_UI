@@ -43,6 +43,7 @@ import { PurchaseOrderComponent } from './purchase-order/purchase-order.componen
 import { AccountDetailsComponent } from './account-details/account-details.component';
 import { ColiseumGridComponent } from './coliseum-grid/coliseum-grid.component';
 import { PurchaseRegisterComponent } from './purchase-register/purchase-register.component';
+import { ColiseumChildGridComponent } from './coliseum-child-grid/coliseum-child-grid.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { PurchaseRegisterComponent } from './purchase-register/purchase-register
     PurchaseOrderComponent,
     AccountDetailsComponent,
     ColiseumGridComponent,
-    PurchaseRegisterComponent
+    PurchaseRegisterComponent,
+    ColiseumChildGridComponent
   ],
   imports: [
     BrowserModule,

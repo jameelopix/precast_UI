@@ -1,16 +1,22 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { Table } from 'primeng/components/table/table';
-import { MESSAGES } from '../model/messages';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
-import { MenuItem } from 'primeng/components/common/menuitem';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  OnChanges,
+  SimpleChanges
+} from "@angular/core";
+import { Table } from "primeng/components/table/table";
+import { MESSAGES } from "../model/messages";
+import { FormGroup, FormControl, FormBuilder } from "@angular/forms";
+import { MenuItem } from "primeng/components/common/menuitem";
 
 @Component({
-  selector: 'grid',
-  templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.css']
+  selector: "grid",
+  templateUrl: "./grid.component.html",
+  styleUrls: ["./grid.component.css"]
 })
-export class GridComponent implements OnInit {
-
+export class GridComponent implements OnInit, OnChanges {
   @ViewChild(Table) tableComponent: Table;
 
   @Input()
@@ -58,7 +64,7 @@ export class GridComponent implements OnInit {
       if (!element["model"]) {
         element["model"] = element["index"];
       }
-      this.rowDataFormGroup.addControl(element["model"], new FormControl(''));
+      this.rowDataFormGroup.addControl(element["model"], new FormControl(""));
     });
 
     //   this.items = [{
@@ -69,6 +75,11 @@ export class GridComponent implements OnInit {
     //     label: 'Close',
     //     command: this.closeCommand
     //   }];
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(JSON.stringify("changes.prop:" + changes.prop));
+    // throw new Error("Method not implemented.");
   }
 
   getActions(options, rowData): MenuItem[] {
@@ -139,7 +150,7 @@ export class GridComponent implements OnInit {
       oldValue: this.selectedValues[0],
       newValue: this.rowDataFormGroup.getRawValue(),
       errors: this.rowDataFormGroup.errors
-    }
+    };
     return obj;
   }
 
@@ -184,7 +195,7 @@ export class GridComponent implements OnInit {
       this.tableComponent.columns = cols;
     }
     this.tableComponent.exportFilename = this.fileName;
-    if (this.exportData == 'selected') {
+    if (this.exportData == "selected") {
       this.tableComponent.exportCSV({ selectionOnly: true });
     } else {
       this.tableComponent.exportCSV();
@@ -269,14 +280,14 @@ export class GridComponent implements OnInit {
     let inputValues = {};
     this.options["columns"].forEach(element => {
       let key = element["model"];
-      if ("date" == element['type']) {
+      if ("date" == element["type"]) {
         inputValues[key] = new Date(value[key]);
       } else {
         inputValues[key] = value[key];
       }
     });
 
-    this.rowDataFormGroup.setValue(inputValues)
+    this.rowDataFormGroup.setValue(inputValues);
 
     this.editState = true;
   }
@@ -296,8 +307,6 @@ export class GridComponent implements OnInit {
     }
     return len;
   }
-
-
 
   delete(value: any) {
     console.log("Inside delete function.");

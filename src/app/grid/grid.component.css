@@ -1,12 +1,12 @@
-.show-on-hover{ 
-display: none;
+.show-on-hover {
+  display: none;
 }
 
-.hoverable:hover .show-on-hover{
-display : block;
+.hoverable:hover .show-on-hover {
+  display: block;
 }
 
-input{
-    outline: 1px solid;
-    border: 1px solid;
+input {
+  outline: 1px solid;
+  border: 1px solid;
 }

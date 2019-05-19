@@ -1,166 +1,274 @@
 <p-messages [value]="messages"></p-messages>
 
-<p-table #grid [value]="values" [paginator]="false" [rows]="10" dataKey="id" [(selection)]="selectedValues"
-    autoLayout="true" [lazy]="true" (onLazyLoad)="lazyLoad($event)" [responsive]="true" (onchange)="changevalue($event)"
-    [resizableColumns]="true" [scrollable]="true" scrollHeight="500px" rowExpandMode="single">
-    <!-- <ng-container *ngTemplateOutlet="caption"> </ng-container> -->
-    <ng-template #caption pTemplate="caption">
-        <div class="clearfix">
-            <h5 class="float-left">
-                {{options.caption}}
-            </h5>
-            <span class="float-right">
-                <button class="btn btn-sm btn-default" type="button" (click)="exportDialog()">
-                    <i class="pi pi-download"></i>
-                </button>
-                <button class="btn btn-sm btn-success" type="button" (click)="add()">
-                    <i class="pi pi-plus">Add</i>
-                </button>
-            </span>
+<p-table
+  #grid
+  [value]="values"
+  [paginator]="false"
+  [rows]="10"
+  dataKey="id"
+  [(selection)]="selectedValues"
+  autoLayout="true"
+  [lazy]="true"
+  (onLazyLoad)="lazyLoad($event)"
+  [responsive]="true"
+  (onchange)="changevalue($event)"
+  [resizableColumns]="true"
+  [scrollable]="true"
+  scrollHeight="500px"
+  rowExpandMode="single"
+>
+  <!-- <ng-container *ngTemplateOutlet="caption"> </ng-container> -->
+  <ng-template #caption pTemplate="caption">
+    <div class="clearfix">
+      <h5 class="float-left">
+        {{ options.caption }}
+      </h5>
+      <span class="float-right">
+        <button
+          class="btn btn-sm btn-default"
+          type="button"
+          (click)="exportDialog()"
+        >
+          <i class="pi pi-download"></i>
+        </button>
+        <button class="btn btn-sm btn-success" type="button" (click)="add()">
+          <i class="pi pi-plus">Add</i>
+        </button>
+      </span>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="colgroup" let-columns>
+    <colgroup>
+      <col *ngFor="let column of options.columns" />
+    </colgroup>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 50px">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <th *ngIf="options.childGridOptions" style="width: 50px"></th>
+      <th
+        *ngFor="let column of options.columns"
+        [style.width]="column.width"
+        pResizableColumn
+      >
+        <span [ngStyle]="column.style">
+          {{ column.name }}
+        </span>
+      </th>
+      <th style="width: 100px;">Action</th>
+    </tr>
+  </ng-template>
+  <ng-template
+    pTemplate="body"
+    let-rowData
+    let-expanded="expanded"
+    let-rowIndex="rowIndex"
+  >
+    <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+      <td style="width: 50px">
+        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+      </td>
+      <td *ngIf="options.childGridOptions" style="width: 50px">
+        <a href="#" [pRowToggler]="rowData">
+          <i
+            [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+          ></i>
+        </a>
+      </td>
+      <td
+        *ngFor="let column of options.columns"
+        [style.width]="column.width"
+        class="ui-resizable-column"
+      >
+        <div *ngIf="rowData['editMode']; else normalMode">
+          <form [formGroup]="rowDataFormGroup">
+            <div [ngSwitch]="column.type">
+              <!-- <span *ngSwitchCase="'date'">date</span> -->
+              <p-calendar
+                *ngSwitchCase="'date'"
+                [formControlName]="column.model"
+                [style]="{ width: '100%' }"
+                appendTo="body"
+              >
+              </p-calendar>
+              <p-dropdown
+                *ngSwitchCase="'select'"
+                [formControlName]="column.model"
+                [options]="column.selectOptions"
+                [style]="{ width: '100%' }"
+                appendTo="body"
+                autoWidth="false"
+              ></p-dropdown>
+              <input
+                *ngSwitchCase="'textInput'"
+                [formControlName]="column.model"
+                style="width:100%"
+                type="text"
+              />
+              <p-checkbox
+                *ngSwitchCase="'checkBox'"
+                [formControlName]="column.model"
+                binary="true"
+              >
+              </p-checkbox>
+              <span *ngSwitchDefault></span>
+            </div>
+          </form>
         </div>
-    </ng-template>
-    <ng-template pTemplate="colgroup" let-columns>
-        <colgroup>
-            <col *ngFor="let column of options.columns">
-        </colgroup>
-    </ng-template>
-    <ng-template pTemplate="header">
-        <tr>
-            <th style="width: 50px">
-                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-            </th>
-            <th *ngIf="options.childGridOptions" style="width: 50px">
-            </th>
-            <th *ngFor="let column of options.columns" [style.width]="column.width" pResizableColumn>
-                <span [ngStyle]="column.style">
-                    {{column.name}}
-                </span>
-            </th>
-            <th style="width: 100px;">Action</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-rowIndex="rowIndex">
-        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            <td style="width: 50px">
-                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-            </td>
-            <td *ngIf="options.childGridOptions" style="width: 50px">
-                <a href="#" [pRowToggler]="rowData">
-                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
-                </a>
-            </td>
-            <td *ngFor="let column of options.columns" [style.width]="column.width" class="ui-resizable-column">
-                <div *ngIf="rowData['editMode']; else normalMode">
-                    <form [formGroup]='rowDataFormGroup'>
-                        <div [ngSwitch]="column.type">
-                            <!-- <span *ngSwitchCase="'date'">date</span> -->
-                            <p-calendar *ngSwitchCase="'date'" [formControlName]="column.model"
-                                [style]="{'width':'100%'}" appendTo="body">
-                            </p-calendar>
-                            <p-dropdown *ngSwitchCase="'select'" [formControlName]="column.model"
-                                [options]="column.selectOptions" [style]="{'width':'100%'}" appendTo="body"
-                                autoWidth="false"></p-dropdown>
-                            <input *ngSwitchCase="'textInput'" [formControlName]="column.model" style="width:100%"
-                                type="text">
-                            <p-checkbox *ngSwitchCase="'checkBox'" [formControlName]="column.model" binary="true">
-                            </p-checkbox>
-                            <span *ngSwitchDefault></span>
-                        </div>
-                    </form>
-                </div>
-                <ng-template #normalMode>
-                    <div [ngSwitch]="column.type">
-                        <span *ngSwitchCase="'date'">{{getValue(rowData,column.index) | date}}</span>
-                        <p-checkbox *ngSwitchCase="'checkBox'" [ngModel]="getValue(rowData,column.index)"
-                            disabled="true" binary="true"></p-checkbox>
-                        <!-- <p-dropdown *ngSwitchCase="'select'" [ngModel]="getValue(rowData,column.index)"
+        <ng-template #normalMode>
+          <div [ngSwitch]="column.type">
+            <span *ngSwitchCase="'date'">{{
+              getValue(rowData, column.index) | date
+            }}</span>
+            <p-checkbox
+              *ngSwitchCase="'checkBox'"
+              [ngModel]="getValue(rowData, column.index)"
+              disabled="true"
+              binary="true"
+            ></p-checkbox>
+            <!-- <p-dropdown *ngSwitchCase="'select'" [ngModel]="getValue(rowData,column.index)"
                             [options]="column.selectOptions" [style]="{'width':'100%'}" appendTo="body"
                             autoWidth="false" [disabled]="true"></p-dropdown> -->
-                        <span *ngSwitchDefault> {{getValue(rowData,column.index)}} </span>
-                    </div>
-                </ng-template>
-            </td>
-            <td class="hoverable" style="width: 100px;">
-                <span *ngIf="!editState" class="show-on-hover">
-                    <a (click)="edit(rowData)"><i class="pi pi-pencil"></i></a>
-                    <a (click)="copy(rowData)"><i class="pi pi-clone"></i></a>
-                    <a (click)="delete(rowData)"><i class="pi pi-trash"></i></a>
-                    <ng-template [ngIf]="options.actions">
-                        <p-menu #menu [popup]="true" [model]="getActions(options,rowData)" appendTo="body"></p-menu>
-                        <a (click)="menu.toggle($event)"><i class="pi pi-angle-down"></i></a>
-                    </ng-template>
-                </span>
-            </td>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-        <tr>
-            <td [attr.colspan]="getColSpan_emptyMsg(options)">
-                <!-- options.columns.length + 2 -->
-                No Records Found!!!
-            </td>
-        </tr>
-    </ng-template>
-    <ng-template [ngIf]="options.childGridOptions" pTemplate="rowexpansion" let-rowData>
-        <tr>
-            <td></td>
-            <td [attr.colspan]="getColSpan_childTable(options)" style="padding: 0%">
-                <!-- columns.length {{options.columns | json}}
-        rowData {{rowData | json}} -->
-                <!-- <ng-content></ng-content> -->
-                <!-- childGridOptions {{options.childGridOptions | json}} -->
-                <grid [parentValue]="rowData" [values]="childvalue1" [options]=options.childGridOptions>
-                </grid>
-            </td>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="summary">
-        <div class="clearfix">
-            <p-paginator rows="10" totalRecords="100" pageLinkSize="3" (onPageChange)="paginate($event)"
-                [rowsPerPageOptions]="[10,20,30]" alwaysShow="false" class="float-left" dropdownAppendTo="body">
-            </p-paginator>
-            <span class="float-right">
-                <button class="btn btn-sm btn-success" type="button" (click)="save()">
-                    <i class="pi pi-save">Save</i>
-                </button>
-                <button class="btn btn-sm btn-default" type="button" (click)="cancel()">
-                    <i class="pi pi-times">Cancel</i>
-                </button>
+            <span *ngSwitchDefault>
+              {{ getValue(rowData, column.index) }}
             </span>
-        </div>
-    </ng-template>
+          </div>
+        </ng-template>
+      </td>
+      <td class="hoverable" style="width: 100px;">
+        <span *ngIf="!editState" class="show-on-hover">
+          <a (click)="edit(rowData)"><i class="pi pi-pencil"></i></a>
+          <a (click)="copy(rowData)"><i class="pi pi-clone"></i></a>
+          <a (click)="delete(rowData)"><i class="pi pi-trash"></i></a>
+          <ng-template [ngIf]="options.actions">
+            <p-menu
+              #menu
+              [popup]="true"
+              [model]="getActions(options, rowData)"
+              appendTo="body"
+            ></p-menu>
+            <a (click)="menu.toggle($event)"
+              ><i class="pi pi-angle-down"></i
+            ></a>
+          </ng-template>
+        </span>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td [attr.colspan]="getColSpan_emptyMsg(options)">
+        <!-- options.columns.length + 2 -->
+        No Records Found!!!
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template
+    [ngIf]="options.childGridOptions"
+    pTemplate="rowexpansion"
+    let-rowData
+  >
+    <tr>
+      <td></td>
+      <td [attr.colspan]="getColSpan_childTable(options)" style="padding: 0%">
+        <!-- columns.length {{options.columns | json}}
+        rowData {{rowData | json}} -->
+        <!-- <ng-content></ng-content> -->
+        <!-- childGridOptions {{options.childGridOptions | json}} -->
+        <grid
+          [parentValue]="rowData"
+          [values]="childvalue1"
+          [options]="options.childGridOptions"
+        >
+        </grid>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="summary">
+    <div class="clearfix">
+      <p-paginator
+        rows="10"
+        totalRecords="100"
+        pageLinkSize="3"
+        (onPageChange)="paginate($event)"
+        [rowsPerPageOptions]="[10, 20, 30]"
+        alwaysShow="false"
+        class="float-left"
+        dropdownAppendTo="body"
+      >
+      </p-paginator>
+      <span class="float-right">
+        <button class="btn btn-sm btn-success" type="button" (click)="save()">
+          <i class="pi pi-save">Save</i>
+        </button>
+        <button class="btn btn-sm btn-default" type="button" (click)="cancel()">
+          <i class="pi pi-times">Cancel</i>
+        </button>
+      </span>
+    </div>
+  </ng-template>
 </p-table>
 
 <p-dialog [(visible)]="exportDialogDisplay" [width]="500">
-    <p-header>
-        Export Options
-    </p-header>
-    <div class="card" style="width: 100%">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-12">
-                    <span class="ui-float-label">
-                        <input id="float-input" type="text" size="30" style="width: 100%" [(ngModel)]="fileName"
-                            pInputText>
-                        <label for="float-input">File Name</label>
-                    </span>
-                </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="col-6">
-                    <p-radioButton name="selectionGroup" value="all" label="All" [(ngModel)]="exportData">
-                    </p-radioButton>
-                </div>
-                <div class="col-5">
-                    <p-radioButton name="selectionGroup" value="selected" label="Selected" [(ngModel)]="exportData">
-                    </p-radioButton>
-                </div>
-            </div>
+  <p-header>
+    Export Options
+  </p-header>
+  <div class="card" style="width: 100%">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12">
+          <span class="ui-float-label">
+            <input
+              id="float-input"
+              type="text"
+              size="30"
+              style="width: 100%"
+              [(ngModel)]="fileName"
+              pInputText
+            />
+            <label for="float-input">File Name</label>
+          </span>
         </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-6">
+          <p-radioButton
+            name="selectionGroup"
+            value="all"
+            label="All"
+            [(ngModel)]="exportData"
+          >
+          </p-radioButton>
+        </div>
+        <div class="col-5">
+          <p-radioButton
+            name="selectionGroup"
+            value="selected"
+            label="Selected"
+            [(ngModel)]="exportData"
+          >
+          </p-radioButton>
+        </div>
+      </div>
     </div>
-    <p-footer>
-        <button type="text" (click)="export()" pButton icon="pi pi-info-circle" label="Export"></button>
-        <button type="text" (click)="closeExportDialog()" pButton icon="pi pi-info-circle" label="Cancel"></button>
-    </p-footer>
+  </div>
+  <p-footer>
+    <button
+      type="text"
+      (click)="export()"
+      pButton
+      icon="pi pi-info-circle"
+      label="Export"
+    ></button>
+    <button
+      type="text"
+      (click)="closeExportDialog()"
+      pButton
+      icon="pi pi-info-circle"
+      label="Cancel"
+    ></button>
+  </p-footer>
 </p-dialog>

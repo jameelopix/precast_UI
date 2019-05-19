@@ -1,25 +1,16 @@
-<!-- <cui-grid [values]=purchaseOrderDTOList [options]=purchaseOrderOptions></cui-grid> -->
+<!-- [lazy]="true"
+  (onLazyLoad)="gridService.lazyLoad(options)" -->
 
 <p-table
   [value]="values"
   [columns]="options.columns"
   dataKey="id"
   autoLayout="true"
-  [lazy]="true"
-  (onLazyLoad)="gridService.lazyLoad(options)"
   [responsive]="true"
   [scrollable]="true"
   scrollHeight="500px"
-  [paginator]="true"
-  [rows]="10"
-  totalRecords="100"
-  pageLinkSize="3"
-  (onPageChange)="paginate($event)"
-  [rowsPerPageOptions]="[10, 20, 30]"
-  alwaysShow="false"
   class="float-left"
   dropdownAppendTo="body"
-  rowExpandMode="single"
 >
   <ng-template #caption pTemplate="caption">
     <div class="clearfix">
@@ -31,7 +22,7 @@
           *ngIf="options.exportCallback"
           class="btn btn-sm btn-default"
           type="button"
-          (click)="options.exportCallback()"
+          (click)="exportDialog()"
         >
           <i class="pi pi-download"></i>
         </button>
@@ -39,7 +30,7 @@
           *ngIf="options.addCallback"
           class="btn btn-sm btn-success"
           type="button"
-          (click)="options.addCallback()"
+          (click)="add()"
         >
           <i class="pi pi-plus">Add</i>
         </button>
@@ -92,11 +83,11 @@
       >
         <!-- <ng-template > -->
         <span *ngSwitchCase="'date'">{{
-          getValue(rowData, column.index) | date
+          gridService.getValue(rowData, column.index) | date
         }}</span>
         <p-checkbox
           *ngSwitchCase="'checkBox'"
-          [ngModel]="getValue(rowData, column.index)"
+          [ngModel]="gridService.getValue(rowData, column.index)"
           disabled="true"
           binary="true"
         >
@@ -104,26 +95,16 @@
         <!-- <p-dropdown *ngSwitchCase="'select'" [ngModel]="getValue(rowData,column.index)"
                       [options]="column.selectOptions" [style]="{'width':'100%'}" appendTo="body"
                       autoWidth="false" [disabled]="true"></p-dropdown> -->
-        <span *ngSwitchDefault> {{ getValue(rowData, column.index) }} </span>
+        <span *ngSwitchDefault>
+          {{ gridService.getValue(rowData, column.index) }}
+        </span>
         <!-- </ng-template> -->
       </td>
       <td class="hoverable" style="width: 100px;">
-        <span class="show-on-hover">
-          <a
-            *ngIf="options.editCallback"
-            (click)="options.editCallback(rowData)"
-            ><i class="pi pi-pencil"></i
-          ></a>
-          <a
-            *ngIf="options.copyCallback"
-            (click)="options.copyCallback(rowData)"
-            ><i class="pi pi-clone"></i
-          ></a>
-          <a
-            *ngIf="options.deleteCallback"
-            (click)="options.deleteCallback(rowData)"
-            ><i class="pi pi-trash"></i
-          ></a>
+        <span *ngIf="!editState" class="show-on-hover">
+          <a (click)="edit(rowData)"><i class="pi pi-pencil"></i></a>
+          <a (click)="copy(rowData)"><i class="pi pi-clone"></i></a>
+          <a (click)="delete(rowData)"><i class="pi pi-trash"></i></a>
           <ng-template [ngIf]="options.actions">
             <p-menu
               #menu
@@ -144,11 +125,10 @@
       </td>
     </tr> -->
   </ng-template>
-  <ng-template
+  <!-- <ng-template
     [ngIf]="options.childGridOptions"
     pTemplate="rowexpansion"
     let-rowData
-    let-columns="columns"
   >
     <tr>
       <td></td>
@@ -157,13 +137,13 @@
         style="padding: 0%"
       >
         <cui-child-grid
-          [values]="childValue"
-          [options]="options.childGridOptions[0]"
+          [values]="purchaseOrderDTOList"
+          [options]="purchaseOrderOptions"
           [parentValue]="rowData"
         ></cui-child-grid>
       </td>
     </tr>
-  </ng-template>
+  </ng-template> -->
   <ng-template pTemplate="emptymessage">
     <tr>
       <td [attr.colspan]="gridService.getColSpan_emptyMsg(options)">

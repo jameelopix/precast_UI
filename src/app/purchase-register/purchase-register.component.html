@@ -1,1 +1,69 @@
-<cui-grid [values]=purchaseOrderDTOList [options]=purchaseOrderOptions></cui-grid>
+<p-messages [(value)]="messages"></p-messages>
+
+<cui-grid
+  [values]="purchaseOrderDTOList"
+  [childValue]="orderItemDTOList"
+  [options]="purchaseOrderOptions"
+></cui-grid>
+
+<p-dialog [(visible)]="purchaseOrderDialogVisibilty" [width]="500">
+  <p-header>
+    Create
+  </p-header>
+  <form [formGroup]="purchaseOrderForm">
+    <div class="form-group">
+      <label for="vendorId">Vendor Name</label>
+      <p-dropdown
+        inputId="vendorId"
+        formControlName="vendorId"
+        name="vendorId"
+        [options]="vendorDTOList"
+        appendTo="body"
+        autoWidth="false"
+        optionLabel="name"
+        [filter]="true"
+        dataKey="id"
+        [style]="{ width: '100%' }"
+        [autoDisplayFirst]="false"
+        placeholder="Select Vendor"
+      ></p-dropdown>
+    </div>
+    <div class="form-group">
+      <label for="purchaseOrderNo">Order No</label>
+      <input
+        class="form-control"
+        name="purchaseOrderNo"
+        id="purchaseOrderNo"
+        type="text"
+        formControlName="purchaseOrderNo"
+      />
+    </div>
+    <div class="form-group">
+      <label for="purchaseDate">Date</label>
+      <p-calendar
+        inputId="purchaseDate"
+        [style]="{ width: '100%' }"
+        formControlName="purchaseDate"
+        appendTo="body"
+        dateFormat="dd/mm/yy"
+      >
+      </p-calendar>
+    </div>
+  </form>
+  <p-footer>
+    <button
+      class="btn btn-sm btn-success"
+      type="button"
+      (click)="savePurchaseOrderDialog()"
+    >
+      <i class="pi pi-save">Save</i>
+    </button>
+    <button
+      class="btn btn-sm btn-default"
+      type="button"
+      (click)="cancelPurchaseOrderDialog()"
+    >
+      <i class="pi pi-times">Cancel</i>
+    </button>
+  </p-footer>
+</p-dialog>
