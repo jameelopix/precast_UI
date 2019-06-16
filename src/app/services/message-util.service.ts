@@ -28,10 +28,11 @@ export class MessageUtilService {
     data: string,
     title: string
   ) {
+    this.clearMessage(messages);
     messages.push({ severity: severity, summary: title, detail: data });
   }
 
   clearMessage(messages: any[]) {
-    messages = [];
+    messages.splice(0, messages.length);
   }
 }

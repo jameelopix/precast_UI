@@ -12,6 +12,7 @@ import { BankAccountComponent } from './bank-account/bank-account.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { AccountDetailsComponent } from './account-details/account-details.component';
 import { PurchaseRegisterComponent } from './purchase-register/purchase-register.component';
+import { VendorComponent } from './vendor/vendor.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -26,6 +27,7 @@ const routes: Routes = [
   { path: 'purchaseorder', component: PurchaseOrderComponent },
   { path: 'purchaseregister', component: PurchaseRegisterComponent },
   { path: 'accountdetails', component: AccountDetailsComponent },
+  { path: 'vendordetails', component: VendorComponent },
   { path: '**', component: LoginComponent },
   // ,
   // { path: 'elementdetailspage', component: ElementDetailsComponent },
