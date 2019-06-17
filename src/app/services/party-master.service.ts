@@ -2,20 +2,20 @@ import { Injectable } from "@angular/core";
 import { ClientService } from "../client.service";
 import { MESSAGES } from "../model/messages";
 
-const SAVE_URL: string = "createAccountDetails";
-const UPDATE_URL: string = "updateAccountDetails";
-const GET_URL: string = "getAccountDetails";
-const DELETE_URL: string = "deleteAccountDetails";
+const SAVE_URL: string = "createPartyMaster";
+const UPDATE_URL: string = "updatePartyMaster";
+const GET_URL: string = "getPartyMaster";
+const DELETE_URL: string = "deletePartyMaster";
 
 @Injectable({
   providedIn: "root"
 })
-export class AccountDetailsService {
+export class PartyMasterService {
   constructor(private clientService: ClientService) {}
 
   save(request, successCallback, errorCallback?) {
     let url = SAVE_URL;
-    if (request["accountDetailsDTO"]["id"]) {
+    if (request["partyMasterDTO"]["id"]) {
       url = UPDATE_URL;
     }
 

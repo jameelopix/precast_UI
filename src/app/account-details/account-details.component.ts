@@ -1,144 +1,219 @@
-import { Component, OnInit } from '@angular/core';
-import { Message, SelectItem, MessageService } from 'primeng/components/common/api';
-import { AccountDetailsDTO } from '../model/account-details-dto';
-import { ClientService } from '../client.service';
-import { PurchaseOrderService } from '../services/purchase-order.service';
-import { OrderItemService } from '../services/order-item.service';
-import { CompanyService } from '../services/company.service';
-import { AccountDetailService } from '../services/account-detail.service';
+import { Component, OnInit } from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { AccountDetailsService } from "../services/account-detail.service";
+import { MessageUtilService } from "../services/message-util.service";
+import { MESSAGES } from "../model/messages";
+import { CompanyService } from "../services/company.service";
 
 @Component({
-  selector: 'app-account-details',
-  templateUrl: './account-details.component.html',
-  styleUrls: ['./account-details.component.css'],
-  providers: [MessageService]
+  selector: "app-account-details",
+  templateUrl: "./account-details.component.html",
+  styleUrls: ["./account-details.component.css"]
 })
 export class AccountDetailsComponent implements OnInit {
+  accountDetailsDTOList: any[] = [];
+  accountDetailsDialogVisibilty: boolean = false;
+  accountDetailsForm: FormGroup;
+  accountDetailsSearchForm: FormGroup;
 
-  messages: Message[] = [];
-
-  accountDetailsDTOList: AccountDetailsDTO[] = [];
-
-  accountTypeSelectOptions: SelectItem[] = [
-    { label: 'Select Item', value: null },
-    { label: 'Cash', value: 'CASH' },
-    { label: 'Bank', value: 'BANK' }
+  companyDTOList: any[] = [];
+  accTypeList: any[] = [
+    {
+      id: "CASH",
+      name: "CASH"
+    },
+    {
+      id: "BANK",
+      name: "BANK"
+    }
+  ];
+  bankList: any[] = [
+    {
+      id: "AXIS",
+      name: "AXIS"
+    },
+    {
+      id: "ICICI",
+      name: "ICICI"
+    },
+    {
+      id: "SBI",
+      name: "SBI"
+    }
   ];
 
-  companySelectOptions: SelectItem[] = [];
+  messages: any[] = [];
+
+  result: any = null;
 
   constructor(
-    private messageService: MessageService,
+    private accountDetailsService: AccountDetailsService,
     private companyService: CompanyService,
-    private accountDetailService: AccountDetailService) { }
+    private messageUtilService: MessageUtilService,
+    private formBuilder: FormBuilder
+  ) {
+    this.createFormGroup();
+  }
 
   ngOnInit() {
-    this.fetchRequiredData();
-
-    // this.purchaseOrderGrid.get
+    this.fetchReleventData();
   }
 
-  fetchRequiredData() {
-    this.getCompany();
+  fetchReleventData() {
+    this.getCompanyDTOList();
   }
 
-  getCompany = () => {
-    let request = {};
-    this.companyService.get(request, (response: any) => {
-      let companyDTOList = response.companyDTOList;
-
-      this.companySelectOptions = [];
-      companyDTOList.forEach(element => {
-        this.companySelectOptions.push({
-          label: element.name,
-          value: element.id
-        });
-      });
-
-      console.log("this.companySelectOptions:" + JSON.stringify(this.companySelectOptions));
+  getCompanyDTOList() {
+    this.companyService.get({}, (response: any) => {
+      this.companyDTOList = response["companyDTOList"];
     });
   }
 
-  saveAccountDetails = (rowData) => {
-    let request = {
-      "accountDetailsDTO": rowData
+  createFormGroup() {
+    this.accountDetailsForm = this.formBuilder.group({
+      id: [null],
+      company: ["", Validators.required],
+      accType: ["", Validators.required],
+      bank: [""],
+      name: ["", Validators.required],
+      accNo: [""]
+    });
+
+    this.accountDetailsSearchForm = this.formBuilder.group({
+      names: [""]
+    });
+  }
+
+  addAccountDetails = () => {
+    this.accountDetailsForm.reset();
+    this.accountDetailsDialogVisibilty = true;
+  };
+
+  editAccountDetails = rowData => {
+    this.populateAccountDetailsForm(rowData, false);
+    this.accountDetailsDialogVisibilty = true;
+  };
+
+  copyAccountDetails = rowData => {
+    this.populateAccountDetailsForm(rowData);
+    this.accountDetailsDialogVisibilty = true;
+  };
+
+  populateAccountDetailsForm(rowData: any, makeIdNull: boolean = true) {
+    this.accountDetailsForm.reset();
+
+    let id = null;
+    if (!makeIdNull) {
+      id = rowData["id"];
+    }
+
+    let formValue = {
+      id: id,
+      name: rowData["name"]
     };
 
-    this.accountDetailService.save(request, (response: any) => {
-      this.getAccountDetails();
-    });
+    this.accountDetailsForm.setValue(formValue);
   }
+
+  searchAccountDetails = () => {
+    let searchFormData = this.accountDetailsSearchForm.getRawValue();
+
+    let request = {
+      accountDetailsSearchDTO: {
+        nameList: [searchFormData["names"]]
+      }
+    };
+
+    this.result = request;
+
+    this.accountDetailsService.get(request, this.getAccountDetailsCallback);
+  };
+
+  saveAccountDetails = () => {
+    this.messageUtilService.clearMessage(this.messages);
+    let formData = this.accountDetailsForm.getRawValue();
+
+    let request = {
+      accountDetailsDTO: {
+        id: formData["id"],
+        name: formData["name"]
+      }
+    };
+
+    this.accountDetailsService.save(
+      request,
+      this.saveAccountDetailsSuccessCallback,
+      this.saveAccountDetailsErrorCallback
+    );
+  };
+
+  saveAccountDetailsSuccessCallback = (response: any) => {
+    this.messageUtilService.showSuccessMessages(
+      this.messages,
+      MESSAGES.SAVE_ACK_MSG
+    );
+    this.accountDetailsDialogVisibilty = false;
+    this.getAccountDetails();
+  };
+
+  saveAccountDetailsErrorCallback = (response: any) => {
+    this.messageUtilService.showErrorMessages(this.messages, response[0]);
+  };
+
+  cancelAccountDetails = () => {
+    this.accountDetailsForm.reset();
+    this.accountDetailsDialogVisibilty = false;
+  };
 
   getAccountDetails = () => {
-    let request = {};
-    this.accountDetailService.get(request, (response: any) => {
-      this.accountDetailsDTOList = response.accountDetailsDTOList;
-    });
-  }
+    this.accountDetailsService.get({}, this.getAccountDetailsCallback);
+  };
 
-  deleteAccountDetails = (id: number) => {
-    this.accountDetailService.delete(id, (response: any) => {
-      this.getAccountDetails();
-    });
-  }
+  getAccountDetailsCallback = (response: any) => {
+    this.accountDetailsDTOList = response.accountDetailsDTOList;
+  };
+
+  deleteAccountDetails = rowData => {
+    this.messageUtilService.clearMessage(this.messages);
+
+    this.accountDetailsService.delete(
+      rowData["id"],
+      this.deleteAccountDetailsSuccessCallback,
+      this.deleteAccountDetailsErrorCallback
+    );
+  };
+
+  deleteAccountDetailsSuccessCallback = (response: any) => {
+    this.messageUtilService.showSuccessMessages(
+      this.messages,
+      MESSAGES.DELETE_ACK_MSG
+    );
+    this.getAccountDetails();
+  };
+
+  deleteAccountDetailsErrorCallback = (response: any) => {
+    this.messageUtilService.showErrorMessages(this.messages, response[0]);
+  };
 
   accountDetailsOptions: any = {
-    values: this.accountDetailsDTOList,
-    caption: "Account Details",
-    saveCallback: this.saveAccountDetails,
+    caption: "AccountDetails Details",
+    addCallback: this.addAccountDetails,
+    editCallback: this.editAccountDetails,
+    copyCallback: this.copyAccountDetails,
     getCallback: this.getAccountDetails,
     deleteCallback: this.deleteAccountDetails,
+    childPresent: true,
     columns: [
       {
-        name: "Company",
-        index: "companyId",
-        type: "select",
-        selectOptions: this.companySelectOptions
-        // width: "300px"
-      },
-      {
-        name: "Account Type",
-        index: "accountType",
-        type: "select",
-        selectOptions: this.accountTypeSelectOptions
-        // width: "300px"
-      }, {
-        name: "Account Name",
-        index: "accountName",
-        type: "textInput",
-        // width: "300px"
-      },
-      {
-        name: "Account No",
-        index: "accountNumber",
+        name: "Name",
+        index: "name",
         type: "textInput"
-        // width: "300px"
+        // width: "45%"
       }
     ]
   };
 
-  clearMessages() {
-    this.messages = [];
+  getControl(field: any) {
+    return this.accountDetailsForm.controls[field];
   }
-
-  showSuccessMessages(data: string, title?: string) {
-    this.writeMessage('success', data, title ? title : 'Success');
-  }
-
-  showInfoMessages(data: string, title?: string) {
-    this.writeMessage('info', data, title ? title : 'Info');
-  }
-
-  showErrorMessages(data: string, title?: string) {
-    this.writeMessage('error', data, title ? title : 'Error');
-  }
-
-  showWarnMessages(data: string, title?: string) {
-    this.writeMessage('warn', data, title ? title : 'Warning');
-  }
-
-  writeMessage(severity: string, data: string, title: string) {
-    this.messages.push({ severity: severity, summary: title, detail: data });
-  }
-
 }

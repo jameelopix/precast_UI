@@ -1,1 +1,156 @@
-<grid [values]=accountDetailsDTOList [messages]="messages" [options]=accountDetailsOptions></grid>
+<form [formGroup]="accountDetailsSearchForm">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <label>Name</label>
+          <input
+            class="form-control"
+            name="name"
+            id="accountDetailsNames"
+            type="text"
+            formControlName="names"
+            style="width: 100%"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button
+            class="btn btn-primary btn-sm btm-space float-right"
+            (click)="searchAccountDetails()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<p-messages [(value)]="messages"></p-messages>
+
+<cui-grid
+  [values]="accountDetailsDTOList"
+  [options]="accountDetailsOptions"
+></cui-grid>
+
+<p-dialog [(visible)]="accountDetailsDialogVisibilty" [width]="500">
+  <p-header>
+    Create
+  </p-header>
+  <form [formGroup]="accountDetailsForm">
+    <div class="form-group">
+      <label for="companyName">Company</label>
+      <p-dropdown
+        id="companyName"
+        [options]="companyDTOList"
+        formControlName="company"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Company"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('company').errors &&
+          (getControl('company').dirty || getControl('company').touched)
+        "
+      >
+        <p *ngIf="getControl('company').errors.required">Company is required</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="accType">Account Type</label>
+      <p-dropdown
+        id="accType"
+        [options]="accTypeList"
+        formControlName="accType"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Account Type"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('accType').errors &&
+          (getControl('accType').dirty || getControl('accType').touched)
+        "
+      >
+        <p *ngIf="getControl('accType').errors.required">Type is required</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="bank">Bank</label>
+      <p-dropdown
+        id="bank"
+        [options]="bankList"
+        formControlName="bank"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Bank"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+    </div>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        class="form-control"
+        name="name"
+        id="name"
+        type="text"
+        formControlName="name"
+        style="width: 100%"
+      />
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('name').errors &&
+          (getControl('name').dirty || getControl('name').touched)
+        "
+      >
+        <p *ngIf="getControl('name').errors.required">Name is required</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="accNo">Account No.</label>
+      <input
+        class="form-control"
+        name="accNo"
+        id="accNo"
+        type="text"
+        formControlName="accNo"
+        style="width: 100%"
+      />
+    </div>
+  </form>
+  <p-footer>
+    <div class="btn-toolbar">
+      <button
+        class="btn btn-sm btn-success"
+        type="button"
+        [disabled]="accountDetailsForm.invalid"
+        (click)="saveAccountDetails()"
+      >
+        <i class="pi pi-save">Save</i>
+      </button>
+      <button
+        class="btn btn-sm btn-default"
+        type="button"
+        (click)="cancelAccountDetails()"
+      >
+        <i class="pi pi-times">Cancel</i>
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

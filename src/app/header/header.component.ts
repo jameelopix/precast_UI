@@ -48,6 +48,16 @@ export class HeaderComponent implements OnInit {
             label: "Vendor Details",
             icon: "pi pi-fw pi-plus",
             routerLink: "/vendordetails"
+          },
+          {
+            label: "Party Master",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/partymaster"
+          },
+          {
+            label: "Company",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/company"
           }
         ]
       }

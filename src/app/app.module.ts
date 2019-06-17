@@ -45,6 +45,7 @@ import { ColiseumGridComponent } from './coliseum-grid/coliseum-grid.component';
 import { PurchaseRegisterComponent } from './purchase-register/purchase-register.component';
 import { ColiseumChildGridComponent } from './coliseum-child-grid/coliseum-child-grid.component';
 import { VendorComponent } from './vendor/vendor.component';
+import { PartyMasterComponent } from './party-master/party-master.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { VendorComponent } from './vendor/vendor.component';
     ColiseumGridComponent,
     PurchaseRegisterComponent,
     ColiseumChildGridComponent,
-    VendorComponent
+    VendorComponent,
+    PartyMasterComponent
   ],
   imports: [
     BrowserModule,

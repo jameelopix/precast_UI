@@ -13,6 +13,7 @@ import { PurchaseOrderComponent } from './purchase-order/purchase-order.componen
 import { AccountDetailsComponent } from './account-details/account-details.component';
 import { PurchaseRegisterComponent } from './purchase-register/purchase-register.component';
 import { VendorComponent } from './vendor/vendor.component';
+import { PartyMasterComponent } from './party-master/party-master.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'purchaseregister', component: PurchaseRegisterComponent },
   { path: 'accountdetails', component: AccountDetailsComponent },
   { path: 'vendordetails', component: VendorComponent },
+  { path: 'partymaster', component: PartyMasterComponent },
   { path: '**', component: LoginComponent },
   // ,
   // { path: 'elementdetailspage', component: ElementDetailsComponent },

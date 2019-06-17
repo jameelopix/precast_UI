@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormBuilder } from "@angular/forms";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { VendorService } from "../services/vendor.service";
 import { MessageUtilService } from "../services/message-util.service";
 import { MESSAGES } from "../model/messages";
@@ -17,12 +17,14 @@ export class VendorComponent implements OnInit {
 
   messages: any[] = [];
 
+  result: any = null;
+
   constructor(
     private vendorService: VendorService,
     private messageUtilService: MessageUtilService,
     private formBuilder: FormBuilder
   ) {
-    this.createVendorFormGroup();
+    this.createFormGroup();
   }
 
   ngOnInit() {
@@ -31,14 +33,14 @@ export class VendorComponent implements OnInit {
 
   fetchReleventData() {}
 
-  createVendorFormGroup() {
+  createFormGroup() {
     this.vendorForm = this.formBuilder.group({
       id: [null],
-      name: [""]
+      name: ["", Validators.required]
     });
 
     this.vendorSearchForm = this.formBuilder.group({
-      names: [[]]
+      names: [""]
     });
   }
 
@@ -72,6 +74,20 @@ export class VendorComponent implements OnInit {
 
     this.vendorForm.setValue(formValue);
   }
+
+  searchVendor = () => {
+    let searchFormData = this.vendorSearchForm.getRawValue();
+
+    let request = {
+      vendorSearchDTO: {
+        nameList: [searchFormData["names"]]
+      }
+    };
+
+    this.result = request;
+
+    this.vendorService.get(request, this.getVendorCallback);
+  };
 
   saveVendor = () => {
     this.messageUtilService.clearMessage(this.messages);
@@ -110,8 +126,6 @@ export class VendorComponent implements OnInit {
   };
 
   getVendor = () => {
-    // this.messageUtilService.clearMessage(this.messages);
-
     this.vendorService.get({}, this.getVendorCallback);
   };
 
@@ -158,4 +172,8 @@ export class VendorComponent implements OnInit {
       }
     ]
   };
+
+  getControl(field: any) {
+    return this.vendorForm.controls[field];
+  }
 }

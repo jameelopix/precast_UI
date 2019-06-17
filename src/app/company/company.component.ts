@@ -1,63 +1,179 @@
-import { Component, OnInit } from '@angular/core';
-import { CompanyWidgetModel } from '../model/company-widget-model';
-import { CompanyDTO } from '../model/company-dto';
-import { CompanyService } from '../services/company.service';
-import { CompanySearchDTO } from '../model/company-search-dto';
+import { Component, OnInit } from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { CompanyService } from "../services/company.service";
+import { MessageUtilService } from "../services/message-util.service";
+import { MESSAGES } from "../model/messages";
 
 @Component({
-  selector: 'app-company',
-  templateUrl: './company.component.html',
-  styleUrls: ['./company.component.css']
+  selector: "app-company",
+  templateUrl: "./company.component.html",
+  styleUrls: ["./company.component.css"]
 })
 export class CompanyComponent implements OnInit {
+  companyDTOList: any[] = [];
+  companyDialogVisibilty: boolean = false;
+  companyForm: FormGroup;
+  companySearchForm: FormGroup;
 
-  companyDTOs: CompanyDTO[] = [];
+  messages: any[] = [];
 
-  constructor(private companyService: CompanyService) { }
+  result: any = null;
+
+  constructor(
+    private companyService: CompanyService,
+    private messageUtilService: MessageUtilService,
+    private formBuilder: FormBuilder
+  ) {
+    this.createFormGroup();
+  }
 
   ngOnInit() {
+    this.fetchReleventData();
   }
 
-  save = (rowData) => {
-    console.log("Inside save function.");
-    console.table(rowData);
+  fetchReleventData() {}
 
-    this.companyService.save(rowData, this.saveCallback);
+  createFormGroup() {
+    this.companyForm = this.formBuilder.group({
+      id: [null],
+      name: ["", Validators.required]
+    });
+
+    this.companySearchForm = this.formBuilder.group({
+      names: [""]
+    });
   }
 
-  saveCallback = (response: CompanyWidgetModel) => {
-    this.get();
+  addCompany = () => {
+    this.companyForm.reset();
+    this.companyDialogVisibilty = true;
+  };
+
+  editCompany = rowData => {
+    this.populateCompanyForm(rowData, false);
+    this.companyDialogVisibilty = true;
+  };
+
+  copyCompany = rowData => {
+    this.populateCompanyForm(rowData);
+    this.companyDialogVisibilty = true;
+  };
+
+  populateCompanyForm(rowData: any, makeIdNull: boolean = true) {
+    this.companyForm.reset();
+
+    let id = null;
+    if (!makeIdNull) {
+      id = rowData["id"];
+    }
+
+    let formValue = {
+      id: id,
+      name: rowData["name"]
+    };
+
+    this.companyForm.setValue(formValue);
   }
 
-  get = () => {
-    this.companyService.get(new CompanySearchDTO(), this.getCallback);
-  }
+  searchCompany = () => {
+    let searchFormData = this.companySearchForm.getRawValue();
 
-  getCallback = (response: CompanyWidgetModel) => {
-    this.companyDTOs = response.companyDTOs;
-  }
+    let request = {
+      companySearchDTO: {
+        nameList: [searchFormData["names"]]
+      }
+    };
 
-  delete = (id: number) => {
-    this.companyService.delete(id, this.deleteCallback);
-  }
+    this.result = request;
 
-  deleteCallback = (response: CompanyWidgetModel) => {
-    this.get();
-  }
+    this.companyService.get(request, this.getCompanyCallback);
+  };
 
-  options: any = {
+  saveCompany = () => {
+    this.messageUtilService.clearMessage(this.messages);
+    let formData = this.companyForm.getRawValue();
+
+    let request = {
+      companyDTO: {
+        id: formData["id"],
+        name: formData["name"]
+      }
+    };
+
+    this.companyService.save(
+      request,
+      this.saveCompanySuccessCallback,
+      this.saveCompanyErrorCallback
+    );
+  };
+
+  saveCompanySuccessCallback = (response: any) => {
+    this.messageUtilService.showSuccessMessages(
+      this.messages,
+      MESSAGES.SAVE_ACK_MSG
+    );
+    this.companyDialogVisibilty = false;
+    this.getCompany();
+  };
+
+  saveCompanyErrorCallback = (response: any) => {
+    this.messageUtilService.showErrorMessages(this.messages, response[0]);
+  };
+
+  cancelCompany = () => {
+    this.companyForm.reset();
+    this.companyDialogVisibilty = false;
+  };
+
+  getCompany = () => {
+    this.companyService.get({}, this.getCompanyCallback);
+  };
+
+  getCompanyCallback = (response: any) => {
+    this.companyDTOList = response.companyDTOList;
+  };
+
+  deleteCompany = rowData => {
+    this.messageUtilService.clearMessage(this.messages);
+
+    this.companyService.delete(
+      rowData["id"],
+      this.deleteCompanySuccessCallback,
+      this.deleteCompanyErrorCallback
+    );
+  };
+
+  deleteCompanySuccessCallback = (response: any) => {
+    this.messageUtilService.showSuccessMessages(
+      this.messages,
+      MESSAGES.DELETE_ACK_MSG
+    );
+    this.getCompany();
+  };
+
+  deleteCompanyErrorCallback = (response: any) => {
+    this.messageUtilService.showErrorMessages(this.messages, response[0]);
+  };
+
+  companyOptions: any = {
     caption: "Company Details",
-    saveCallback: this.save,
-    getCallback: this.get,
-    deleteCallback: this.delete,
+    addCallback: this.addCompany,
+    editCallback: this.editCompany,
+    copyCallback: this.copyCompany,
+    getCallback: this.getCompany,
+    deleteCallback: this.deleteCompany,
+    childPresent: true,
     columns: [
       {
         name: "Name",
         index: "name",
-        type: "textInput",
-        width: "700px"
+        type: "textInput"
+        // width: "45%"
       }
     ]
   };
 
+  getControl(field: any) {
+    return this.companyForm.controls[field];
+  }
 }

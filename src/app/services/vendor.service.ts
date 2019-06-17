@@ -11,7 +11,6 @@ const DELETE_URL: string = "deleteVendor";
   providedIn: "root"
 })
 export class VendorService {
-  
   constructor(private clientService: ClientService) {}
 
   save(request, successCallback, errorCallback?) {

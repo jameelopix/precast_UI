@@ -1,35 +1,32 @@
 <form [formGroup]="vendorSearchForm">
-  <div class="row">
-    <div class="col-sm-12 form-group">
-      <label for="vendorNames">Name</label>
-      <input
-        class="form-control"
-        name="name"
-        id="vendorNames"
-        type="text"
-        formControlName="names"
-        style="width: 100%"
-      />
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <label>Name</label>
+          <input
+            class="form-control"
+            name="name"
+            id="vendorNames"
+            type="text"
+            formControlName="names"
+            style="width: 100%"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button
+            class="btn btn-primary btn-sm btm-space float-right"
+            (click)="searchVendor()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="btn-toolbar float-right">
-    <button
-      class="btn btn-sm btn-success"
-      type="button"
-      (click)="searchVendor()"
-    >
-      <i class="pi pi-save">Search</i>
-    </button>
-    <button
-      class="btn btn-sm btn-default"
-      type="button"
-      (click)="clearVendor()"
-    >
-      <i class="pi pi-times">Clear</i>
-    </button>
-  </div>
 </form>
-<br /><br />
 <p-messages [(value)]="messages"></p-messages>
 
 <cui-grid [values]="vendorDTOList" [options]="vendorOptions"></cui-grid>
@@ -48,6 +45,15 @@
         type="text"
         formControlName="name"
       />
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('name').errors &&
+          (getControl('name').dirty || getControl('name').touched)
+        "
+      >
+        <p *ngIf="getControl('name').errors.required">Name is required</p>
+      </div>
     </div>
   </form>
   <p-footer>
@@ -55,6 +61,7 @@
       <button
         class="btn btn-sm btn-success"
         type="button"
+        [disabled]="vendorForm.invalid"
         (click)="saveVendor()"
       >
         <i class="pi pi-save">Save</i>
