@@ -4,6 +4,7 @@ import { AccountDetailsService } from "../services/account-detail.service";
 import { MessageUtilService } from "../services/message-util.service";
 import { MESSAGES } from "../model/messages";
 import { CompanyService } from "../services/company.service";
+import { UIService } from "../services/ui.service";
 
 @Component({
   selector: "app-account-details",
@@ -50,6 +51,7 @@ export class AccountDetailsComponent implements OnInit {
     private accountDetailsService: AccountDetailsService,
     private companyService: CompanyService,
     private messageUtilService: MessageUtilService,
+    private uiservice: UIService,
     private formBuilder: FormBuilder
   ) {
     this.createFormGroup();
@@ -72,15 +74,19 @@ export class AccountDetailsComponent implements OnInit {
   createFormGroup() {
     this.accountDetailsForm = this.formBuilder.group({
       id: [null],
-      company: ["", Validators.required],
-      accType: ["", Validators.required],
-      bank: [""],
-      name: ["", Validators.required],
-      accNo: [""]
+      companyId: ["", Validators.required],
+      accountType: ["", Validators.required],
+      bankName: [""],
+      accountName: ["", Validators.required],
+      accountNumber: [""]
     });
 
     this.accountDetailsSearchForm = this.formBuilder.group({
-      names: [""]
+      accountNameList: [""],
+      accountNumberList: [""],
+      accountTypeList: [""],
+      bankNameList: [""],
+      companyIdList: [""]
     });
   }
 
@@ -109,25 +115,19 @@ export class AccountDetailsComponent implements OnInit {
 
     let formValue = {
       id: id,
-      name: rowData["name"]
+      companyId: { id: rowData["companyId"] },
+      accountType: { id: rowData["accountType"] },
+      bankName: { id: rowData["bankName"] },
+      accountName: rowData["accountName"],
+      accountNumber: rowData["accountNumber"]
     };
 
     this.accountDetailsForm.setValue(formValue);
   }
 
-  searchAccountDetails = () => {
-    let searchFormData = this.accountDetailsSearchForm.getRawValue();
+  // searchAccountDetails = () => {
 
-    let request = {
-      accountDetailsSearchDTO: {
-        nameList: [searchFormData["names"]]
-      }
-    };
-
-    this.result = request;
-
-    this.accountDetailsService.get(request, this.getAccountDetailsCallback);
-  };
+  // };
 
   saveAccountDetails = () => {
     this.messageUtilService.clearMessage(this.messages);
@@ -136,7 +136,11 @@ export class AccountDetailsComponent implements OnInit {
     let request = {
       accountDetailsDTO: {
         id: formData["id"],
-        name: formData["name"]
+        companyId: formData["companyId"]["id"],
+        accountType: formData["accountType"]["id"],
+        bankName: formData["bankName"]["id"],
+        accountName: formData["accountName"],
+        accountNumber: formData["accountNumber"]
       }
     };
 
@@ -166,7 +170,36 @@ export class AccountDetailsComponent implements OnInit {
   };
 
   getAccountDetails = () => {
-    this.accountDetailsService.get({}, this.getAccountDetailsCallback);
+    let searchFormData = this.accountDetailsSearchForm.getRawValue();
+
+    let request = {
+      accountDetailsSearchDTO: {
+        accountNameList: this.uiservice.getSearchData(
+          searchFormData,
+          "companyIdList"
+        ),
+        accountNumberList: this.uiservice.getSearchData(
+          searchFormData,
+          "accountNumberList"
+        ),
+        accountTypeList: this.uiservice.getSearchData(
+          searchFormData,
+          "accountTypeList"
+        ),
+        bankNameList: this.uiservice.getSearchData(
+          searchFormData,
+          "bankNameList"
+        ),
+        companyIdList: this.uiservice.getSearchData(
+          searchFormData,
+          "companyIdList"
+        ),
+        companyNeeded: true
+      }
+    };
+
+    this.accountDetailsDTOList = [];
+    this.accountDetailsService.get(request, this.getAccountDetailsCallback);
   };
 
   getAccountDetailsCallback = (response: any) => {
@@ -205,10 +238,29 @@ export class AccountDetailsComponent implements OnInit {
     childPresent: true,
     columns: [
       {
-        name: "Name",
-        index: "name",
+        name: "Account Name",
+        index: "accountName",
         type: "textInput"
-        // width: "45%"
+      },
+      {
+        name: "Account No.",
+        index: "accountNumber",
+        type: "textInput"
+      },
+      {
+        name: "Type",
+        index: "accountType",
+        type: "textInput"
+      },
+      {
+        name: "Bank",
+        index: "bankName",
+        type: "textInput"
+      },
+      {
+        name: "Company",
+        index: "companyDTO.name",
+        type: "textInput"
       }
     ]
   };

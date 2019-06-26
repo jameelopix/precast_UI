@@ -2,23 +2,60 @@
   <div class="card">
     <div class="card-body">
       <div class="row">
-        <div class="form-group col-sm-12">
-          <label>Name</label>
-          <input
-            class="form-control"
-            name="name"
-            id="accountDetailsNames"
-            type="text"
-            formControlName="names"
-            style="width: 100%"
-          />
+        <div class="form-group col-sm-4">
+          <label>Company</label>
+          <p-dropdown
+            id="companyIdList"
+            [options]="companyDTOList"
+            formControlName="companyIdList"
+            dataKey="id"
+            inputId="id"
+            placeholder="Select Company"
+            optionLabel="name"
+            appendTo="body"
+            [style]="{ width: '100%', height: '40px' }"
+            showClear="true"
+          >
+          </p-dropdown>
+        </div>
+        <div class="form-group col-sm-4">
+          <label>Account Type</label>
+          <p-dropdown
+            id="accountTypeList"
+            [options]="accTypeList"
+            formControlName="accountTypeList"
+            dataKey="id"
+            inputId="id"
+            placeholder="Select Type"
+            optionLabel="name"
+            appendTo="body"
+            [style]="{ width: '100%', height: '40px' }"
+            showClear="true"
+          >
+          </p-dropdown>
+        </div>
+        <div class="form-group col-sm-4">
+          <label>Bank</label>
+          <p-dropdown
+            id="bankNameList"
+            [options]="bankList"
+            formControlName="bankNameList"
+            dataKey="id"
+            inputId="id"
+            placeholder="Select Bank"
+            optionLabel="name"
+            appendTo="body"
+            [style]="{ width: '100%', height: '40px' }"
+            showClear="true"
+          >
+          </p-dropdown>
         </div>
       </div>
       <div class="row">
         <div class="col-12">
           <button
             class="btn btn-primary btn-sm btm-space float-right"
-            (click)="searchAccountDetails()"
+            (click)="getAccountDetails()"
           >
             Search
           </button>
@@ -44,7 +81,7 @@
       <p-dropdown
         id="companyName"
         [options]="companyDTOList"
-        formControlName="company"
+        formControlName="companyId"
         dataKey="id"
         inputId="id"
         placeholder="Select Company"
@@ -56,11 +93,13 @@
       <div
         class="form-control-feedback"
         *ngIf="
-          getControl('company').errors &&
-          (getControl('company').dirty || getControl('company').touched)
+          getControl('companyId').errors &&
+          (getControl('companyId').dirty || getControl('companyId').touched)
         "
       >
-        <p *ngIf="getControl('company').errors.required">Company is required</p>
+        <p *ngIf="getControl('companyId').errors.required">
+          Company is required
+        </p>
       </div>
     </div>
     <div class="form-group">
@@ -68,7 +107,7 @@
       <p-dropdown
         id="accType"
         [options]="accTypeList"
-        formControlName="accType"
+        formControlName="accountType"
         dataKey="id"
         inputId="id"
         placeholder="Select Account Type"
@@ -80,11 +119,13 @@
       <div
         class="form-control-feedback"
         *ngIf="
-          getControl('accType').errors &&
-          (getControl('accType').dirty || getControl('accType').touched)
+          getControl('accountType').errors &&
+          (getControl('accountType').dirty || getControl('accountType').touched)
         "
       >
-        <p *ngIf="getControl('accType').errors.required">Type is required</p>
+        <p *ngIf="getControl('accountType').errors.required">
+          Type is required
+        </p>
       </div>
     </div>
     <div class="form-group">
@@ -92,7 +133,7 @@
       <p-dropdown
         id="bank"
         [options]="bankList"
-        formControlName="bank"
+        formControlName="bankName"
         dataKey="id"
         inputId="id"
         placeholder="Select Bank"
@@ -109,17 +150,19 @@
         name="name"
         id="name"
         type="text"
-        formControlName="name"
+        formControlName="accountName"
         style="width: 100%"
       />
       <div
         class="form-control-feedback"
         *ngIf="
-          getControl('name').errors &&
-          (getControl('name').dirty || getControl('name').touched)
+          getControl('accountName').errors &&
+          (getControl('accountName').dirty || getControl('accountName').touched)
         "
       >
-        <p *ngIf="getControl('name').errors.required">Name is required</p>
+        <p *ngIf="getControl('accountName').errors.required">
+          Name is required
+        </p>
       </div>
     </div>
     <div class="form-group">
@@ -129,7 +172,7 @@
         name="accNo"
         id="accNo"
         type="text"
-        formControlName="accNo"
+        formControlName="accountNumber"
         style="width: 100%"
       />
     </div>
