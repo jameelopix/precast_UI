@@ -1,10 +1,114 @@
-<grid #projectGrid [values]=projectDTOs [options]=projectOptions></grid>
+<form [formGroup]="projectSearchForm">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-sm-6">
+          <label>Name</label>
+          <input
+            class="form-control"
+            name="name"
+            id="name"
+            type="text"
+            formControlName="nameList"
+            style="width: 100%"
+          />
+        </div>
+        <div class="form-group col-sm-6">
+          <label>Code</label>
+          <input
+            class="form-control"
+            name="code"
+            id="code"
+            type="text"
+            formControlName="codeList"
+            style="width: 100%"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button
+            class="btn btn-primary btn-sm btm-space float-right"
+            (click)="getProject()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<p-messages [(value)]="messages"></p-messages>
 
-<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-  <div class="btn-group">
-    <button type="button" class="btn btn-secondary">Save</button>
-  </div>
-  <div class="btn-group" role="group" aria-label="Second group">
-    <button type="button" class="btn btn-secondary">Cancel</button>
-  </div>
-</div>
+<cui-grid [values]="projectDTOList" [options]="projectOptions"></cui-grid>
+
+<p-dialog [(visible)]="projectDialogVisibilty" [width]="500">
+  <p-header>
+    Create
+  </p-header>
+  <form [formGroup]="projectForm">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        class="form-control"
+        name="name"
+        id="name"
+        type="text"
+        formControlName="name"
+        style="width: 100%"
+      />
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('name').errors &&
+          (getControl('name').dirty || getControl('name').touched)
+        "
+      >
+        <p *ngIf="getControl('name').errors.required">
+          Name is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="code">Code</label>
+      <input
+        class="form-control"
+        name="code"
+        id="code"
+        type="text"
+        formControlName="code"
+        style="width: 100%"
+      />
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('code').errors &&
+          (getControl('code').dirty || getControl('code').touched)
+        "
+      >
+        <p *ngIf="getControl('code').errors.required">
+          Code is required
+        </p>
+      </div>
+    </div>
+  </form>
+  <p-footer>
+    <div class="btn-toolbar">
+      <button
+        class="btn btn-sm btn-success"
+        type="button"
+        [disabled]="projectForm.invalid"
+        (click)="saveProject()"
+      >
+        <i class="pi pi-save">Save</i>
+      </button>
+      <button
+        class="btn btn-sm btn-default"
+        type="button"
+        (click)="cancelProject()"
+      >
+        <i class="pi pi-times">Cancel</i>
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

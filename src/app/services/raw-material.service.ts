@@ -1,45 +1,39 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
+import { ClientService } from "../client.service";
+import { MESSAGES } from "../model/messages";
 
-import { RawMaterialDTO } from '../model/raw-material-dto';
-
-import { ClientService } from '../client.service';
-
-const DELETE_URL: string = 'deleteRawMaterial';
-const GET_URL: string = 'getRawMaterial';
-const SAVE_URL: string = 'createRawMaterial';
-const UPDATE_URL: string = 'updateRawMaterial';
+const SAVE_URL: string = "createRawMaterial";
+const UPDATE_URL: string = "updateRawMaterial";
+const GET_URL: string = "getRawMaterial";
+const DELETE_URL: string = "deleteRawMaterial";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class RawMaterialService {
+  constructor(private clientService: ClientService) {}
 
-  constructor(private clientService: ClientService) { }
-
-  save(value: RawMaterialDTO, callback) {
-    var request: any = {
-      "rawMaterialDTO": value
-    };
-
+  save(request, successCallback, errorCallback?) {
     let url = SAVE_URL;
-    if (value.id) {
+    if (request["rawMaterialDTO"]["id"]) {
       url = UPDATE_URL;
     }
 
-    this.clientService.post(url, request, callback);
+    this.clientService.post(url, request, successCallback, errorCallback);
   }
 
-  delete(id: number, callback) {
-    this.clientService.post(DELETE_URL, { idsToDelete: [id] }, callback);
+  delete(id: number, successCallback, errorCallback?) {
+    if (window.confirm(MESSAGES.DELETE_CONFIRM_MSG)) {
+      this.clientService.post(
+        DELETE_URL,
+        { idsToDelete: [id] },
+        successCallback,
+        errorCallback
+      );
+    }
   }
 
-  get1(ids: number[], callback) {
-    var request: any = {
-      "rawMaterialSearchDTO": {
-        "ids": ids
-      }
-    };
-
-    this.clientService.post(GET_URL, request, callback);
+  get(request, successCallback, errorCallback?) {
+    this.clientService.post(GET_URL, request, successCallback, errorCallback);
   }
 }

@@ -1,27 +1,16 @@
-<form [formGroup]="rawMaterialSearchForm">
+<form [formGroup]="elementTypeSearchForm">
   <div class="card">
     <div class="card-body">
       <div class="row">
-        <div class="form-group col-sm-6">
-          <label>Name</label>
-          <input
-            class="form-control"
-            name="name"
-            id="name"
-            type="text"
-            formControlName="nameList"
-            style="width: 100%"
-          />
-        </div>
-        <div class="form-group col-sm-6">
-          <label>Type</label>
+        <div class="form-group col-sm-4">
+          <label>Project</label>
           <p-dropdown
-            id="typeList"
-            [options]="typeList"
-            formControlName="typeList"
+            id="projectList"
+            [options]="projectDTOList"
+            formControlName="projectList"
             dataKey="id"
             inputId="id"
-            placeholder="Select Type"
+            placeholder="Select Project"
             optionLabel="name"
             appendTo="body"
             [style]="{ width: '100%', height: '40px' }"
@@ -34,7 +23,7 @@
         <div class="col-12">
           <button
             class="btn btn-primary btn-sm btm-space float-right"
-            (click)="getRawMaterial()"
+            (click)="getElementType()"
           >
             Search
           </button>
@@ -46,15 +35,41 @@
 <p-messages [(value)]="messages"></p-messages>
 
 <cui-grid
-  [values]="rawMaterialDTOList"
-  [options]="rawMaterialOptions"
+  [values]="elementTypeDTOList"
+  [options]="elementTypeOptions"
 ></cui-grid>
 
-<p-dialog [(visible)]="rawMaterialDialogVisibilty" [width]="500">
+<p-dialog [(visible)]="elementTypeDialogVisibilty" [width]="500">
   <p-header>
     Create
   </p-header>
-  <form [formGroup]="rawMaterialForm">
+  <form [formGroup]="elementTypeForm">
+    <div class="form-group">
+      <label for="projectDTOId">Project</label>
+      <p-dropdown
+        id="projectDTOId"
+        [options]="projectDTOList"
+        formControlName="projectDTOId"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Project"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('projectDTOId').errors &&
+          (getControl('projectDTOId').dirty || getControl('projectDTOId').touched)
+        "
+      >
+        <p *ngIf="getControl('projectDTOId').errors.required">
+          Project is required
+        </p>
+      </div>
+    </div>
     <div class="form-group">
       <label for="name">Name</label>
       <input
@@ -77,47 +92,21 @@
         </p>
       </div>
     </div>
-    <div class="form-group">
-      <label for="type">Type</label>
-      <p-dropdown
-        id="type"
-        [options]="typeList"
-        formControlName="type"
-        dataKey="id"
-        inputId="id"
-        placeholder="Select Type"
-        optionLabel="name"
-        appendTo="body"
-        [style]="{ width: '100%', height: '40px' }"
-      >
-      </p-dropdown>
-      <div
-        class="form-control-feedback"
-        *ngIf="
-          getControl('type').errors &&
-          (getControl('type').dirty || getControl('type').touched)
-        "
-      >
-        <p *ngIf="getControl('type').errors.required">
-          Type is required
-        </p>
-      </div>
-    </div>
   </form>
   <p-footer>
     <div class="btn-toolbar">
       <button
         class="btn btn-sm btn-success"
         type="button"
-        [disabled]="rawMaterialForm.invalid"
-        (click)="saveRawMaterial()"
+        [disabled]="elementTypeForm.invalid"
+        (click)="saveElementType()"
       >
         <i class="pi pi-save">Save</i>
       </button>
       <button
         class="btn btn-sm btn-default"
         type="button"
-        (click)="cancelRawMaterial()"
+        (click)="cancelElementType()"
       >
         <i class="pi pi-times">Cancel</i>
       </button>

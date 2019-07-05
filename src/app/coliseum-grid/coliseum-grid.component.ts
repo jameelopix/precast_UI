@@ -25,24 +25,11 @@ export class ColiseumGridComponent implements OnInit {
     this.options.getCallback();
   }
 
-  getColSpan_emptyMsg(options) {
-    let len = options.columns.length + 2;
-    if (options.childGridOptions) {
-      len++;
-    }
-    return len;
-  }
-
-  private getValue(rowData: any, index: string, type?: string) {
-    let values = index.split(".");
-    let output = rowData;
-    values.forEach(element => {
-      output = output[element];
-    });
-    // console.table(output);
-    // if ('date' == type) {
-    //   output = new Date(output);
-    // }
-    return output;
-  }
+  // getColSpan_emptyMsg(options) {
+  //   let len = options.columns.length + 2;
+  //   if (options.childGridOptions) {
+  //     len++;
+  //   }
+  //   return len;
+  // }
 }

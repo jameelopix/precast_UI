@@ -58,6 +58,31 @@ export class HeaderComponent implements OnInit {
             label: "Company",
             icon: "pi pi-fw pi-plus",
             routerLink: "/company"
+          },
+          {
+            label: "Raw Material",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/rawmaterialpage"
+          },
+          {
+            label: "Mix Design",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/mixdesignpage"
+          },
+          {
+            label: "Project",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/projectpage"
+          },
+          {
+            label: "Element Details",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/elementpage"
+          },
+          {
+            label: "Element Type Details",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/elementtypepage"
           }
         ]
       }

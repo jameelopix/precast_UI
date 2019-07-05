@@ -1,118 +1,186 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
-import { SelectItem } from 'primeng/api';
-
-import { ProjectService } from '../services/project.service';
-
-import { ProjectDTO } from '../model/project-dto';
-import { ProjectWidgetModel } from '../model/project-widget-model';
-import { ProjectSearchDTO } from '../model/project-search-dto';
-import { GridComponent } from '../grid/grid.component';
-
-const DELETE_URL: string = 'deleteProject';
-const GET_URL: string = 'getProject';
-const SAVE_URL: string = 'createProject';
-const UPDATE_URL: string = 'updateProject';
-const ESTIMATE_URL: string = 'estimateProject';
+import { Component, OnInit } from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { ProjectService } from "../services/project.service";
+import { MessageUtilService } from "../services/message-util.service";
+import { MESSAGES } from "../model/messages";
+import { CompanyService } from "../services/company.service";
+import { UIService } from "../services/ui.service";
 
 @Component({
-  selector: 'app-project',
-  templateUrl: './project.component.html',
-  styleUrls: ['./project.component.css']
+  selector: "app-project",
+  templateUrl: "./project.component.html",
+  styleUrls: ["./project.component.css"]
 })
 export class ProjectComponent implements OnInit {
+  projectDTOList: any[] = [];
+  projectDialogVisibilty: boolean = false;
+  projectForm: FormGroup;
+  projectSearchForm: FormGroup;
 
-  @ViewChild('projectGrid')
-  projectGrid: GridComponent;
+  messages: any[] = [];
 
-  projectDTOs: ProjectDTO[] = [];
+  result: any = null;
 
-  unitTypeOptions: SelectItem[] = [];
-
-  constructor(private projectService: ProjectService) { }
+  constructor(
+    private projectService: ProjectService,
+    private messageUtilService: MessageUtilService,
+    private uiservice: UIService,
+    private formBuilder: FormBuilder
+  ) {
+    this.createFormGroup();
+  }
 
   ngOnInit() {
-    this.fetchRequiredData();
+    this.fetchReleventData();
   }
 
-  fetchRequiredData() {
-    this.getUnitType();
-    this.get();
-  }
+  fetchReleventData() {}
 
-  getUnitType() {
-    let options = [
-      { label: 'Sq. Feet', value: 'SQ_FT' },
-      { label: 'Sq. Metre', value: 'SQ_MT' },
-      { label: 'Litres', value: 'LITRES' },
-      { label: 'Count', value: 'NOS' }
-    ];
+  createFormGroup() {
+    this.projectForm = this.formBuilder.group({
+      id: [null],
+      code: ["", Validators.required],
+      name: ["", Validators.required]
+    });
 
-    options.forEach(element => {
-      this.unitTypeOptions.push(element);
+    this.projectSearchForm = this.formBuilder.group({
+      nameList: [""],
+      codeList: [""]
     });
   }
 
-  save = (rowData) => {
-    console.log("Inside save function.");
-    console.table(rowData);
+  addProject = () => {
+    this.projectForm.reset();
+    this.projectDialogVisibilty = true;
+  };
 
-    console.log(this.projectGrid.getRowData());
+  editProject = rowData => {
+    this.populateProjectForm(rowData, false);
+    this.projectDialogVisibilty = true;
+  };
 
-    this.projectService.save(rowData, this.saveCallback);
+  copyProject = rowData => {
+    this.populateProjectForm(rowData);
+    this.projectDialogVisibilty = true;
+  };
+
+  populateProjectForm(rowData: any, makeIdNull: boolean = true) {
+    this.projectForm.reset();
+
+    let id = null;
+    if (!makeIdNull) {
+      id = rowData["id"];
+    }
+
+    let formValue = {
+      id: id,
+      name: rowData["name"],
+      code: rowData["code"]
+    };
+
+    this.projectForm.setValue(formValue);
   }
 
-  saveCallback = (response: ProjectWidgetModel) => {
-    this.get();
-  }
+  saveProject = () => {
+    this.messageUtilService.clearMessage(this.messages);
+    let formData = this.projectForm.getRawValue();
 
-  get = () => {
-    this.projectService.get(new ProjectSearchDTO(), this.getCallback);
-  }
+    let request = {
+      projectDTO: {
+        id: formData["id"],
+        name: formData["name"],
+        code: formData["code"]
+      }
+    };
 
-  getCallback = (response: ProjectWidgetModel) => {
-    this.projectDTOs = response.projectDTOs;
-  }
+    this.projectService.save(
+      request,
+      this.saveProjectSuccessCallback,
+      this.saveProjectErrorCallback
+    );
+  };
 
-  delete = (id: number) => {
-    this.projectService.delete(id, this.deleteCallback);
-  }
+  saveProjectSuccessCallback = (response: any) => {
+    this.messageUtilService.showSuccessMessages(
+      this.messages,
+      MESSAGES.SAVE_ACK_MSG
+    );
+    this.projectDialogVisibilty = false;
+    this.getProject();
+  };
 
-  deleteCallback = (response: ProjectWidgetModel) => {
-    this.get();
-  }
+  saveProjectErrorCallback = (response: any) => {
+    this.messageUtilService.showErrorMessages(this.messages, response[0]);
+  };
+
+  cancelProject = () => {
+    this.projectForm.reset();
+    this.projectDialogVisibilty = false;
+  };
+
+  getProject = () => {
+    let searchFormData = this.projectSearchForm.getRawValue();
+
+    let request = {
+      projectSearchDTO: {
+        nameList: this.uiservice.getSearchData(searchFormData, "nameList"),
+        codeList: this.uiservice.getSearchData(searchFormData, "codeList")
+      }
+    };
+
+    this.projectDTOList = [];
+    this.projectService.get(request, this.getProjectCallback);
+  };
+
+  getProjectCallback = (response: any) => {
+    this.projectDTOList = response.projectDTOList;
+  };
+
+  deleteProject = rowData => {
+    this.messageUtilService.clearMessage(this.messages);
+
+    this.projectService.delete(
+      rowData["id"],
+      this.deleteProjectSuccessCallback,
+      this.deleteProjectErrorCallback
+    );
+  };
+
+  deleteProjectSuccessCallback = (response: any) => {
+    this.messageUtilService.showSuccessMessages(
+      this.messages,
+      MESSAGES.DELETE_ACK_MSG
+    );
+    this.getProject();
+  };
+
+  deleteProjectErrorCallback = (response: any) => {
+    this.messageUtilService.showErrorMessages(this.messages, response[0]);
+  };
 
   projectOptions: any = {
     caption: "Project Details",
-    saveCallback: this.save,
-    getCallback: this.get,
-    deleteCallback: this.delete,
+    addCallback: this.addProject,
+    editCallback: this.editProject,
+    copyCallback: this.copyProject,
+    getCallback: this.getProject,
+    deleteCallback: this.deleteProject,
+    childPresent: true,
     columns: [
       {
-        name: "Code",
-        index: "code",
-        type: "textInput",
-        width: "300px"
-      },
-      {
-        name: "Name",
+        name: "Project Name",
         index: "name",
-        type: "textInput",
-        width: "300px"
+        type: "textInput"
       },
       {
-        name: "Unit",
-        index: "unitType",
-        type: "select",
-        width: "300px",
-        selectOptions: this.unitTypeOptions
-      },
-      {
-        name: "Quantity",
-        index: "quantity",
-        type: "textInput",
-        width: "300px"
+        name: "Project Code",
+        index: "code",
+        type: "textInput"
       }
     ]
   };
+
+  getControl(field: any) {
+    return this.projectForm.controls[field];
+  }
 }

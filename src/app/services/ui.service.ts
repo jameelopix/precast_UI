@@ -6,6 +6,20 @@ import { Injectable } from "@angular/core";
 export class UIService {
   constructor() {}
 
+  public getDropdownlist(array: any[]): any[] {
+    let dropdownList = [];
+    array.forEach(element => {
+      let obj = {
+        id: element,
+        name: element
+      };
+
+      dropdownList.push(obj);
+    });
+
+    return dropdownList;
+  }
+
   public getSearchData(formData: any[], fieldName: string): any {
     let arr: any[] = [];
 

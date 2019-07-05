@@ -92,19 +92,21 @@
       >
         <!-- <ng-template > -->
         <span *ngSwitchCase="'date'">{{
-          getValue(rowData, column.index) | date
+          gridService.getValue(rowData, column.index) | date
         }}</span>
         <p-checkbox
           *ngSwitchCase="'checkBox'"
-          [ngModel]="getValue(rowData, column.index)"
+          [ngModel]="gridService.getValue(rowData, column.index)"
           disabled="true"
           binary="true"
         >
         </p-checkbox>
-        <!-- <p-dropdown *ngSwitchCase="'select'" [ngModel]="getValue(rowData,column.index)"
+        <!-- <p-dropdown *ngSwitchCase="'select'" [ngModel]="gridService.getValue(rowData,column.index)"
                       [options]="column.selectOptions" [style]="{'width':'100%'}" appendTo="body"
                       autoWidth="false" [disabled]="true"></p-dropdown> -->
-        <span *ngSwitchDefault> {{ getValue(rowData, column.index) }} </span>
+        <span *ngSwitchDefault>
+          {{ gridService.getValue(rowData, column.index) }}
+        </span>
         <!-- </ng-template> -->
       </td>
       <td class="hoverable" style="width: 100px;">
