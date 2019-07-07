@@ -159,8 +159,15 @@
         style="padding: 0%"
       >
         <cui-child-grid
+          *ngIf="options.childGridOptions[0]"
           [values]="childValue"
           [options]="options.childGridOptions[0]"
+          [parentValue]="rowData"
+        ></cui-child-grid>
+        <cui-child-grid
+          *ngIf="options.childGridOptions[1]"
+          [values]="childValue2"
+          [options]="options.childGridOptions[1]"
           [parentValue]="rowData"
         ></cui-child-grid>
       </td>

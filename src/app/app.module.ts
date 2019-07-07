@@ -47,7 +47,7 @@ import { ColiseumChildGridComponent } from './coliseum-child-grid/coliseum-child
 import { VendorComponent } from './vendor/vendor.component';
 import { PartyMasterComponent } from './party-master/party-master.component';
 import { MixtureComponent } from './mixture/mixture.component';
-import { ElementDetailsComponent } from './element-details/element-details.component';
+import { ElementComponent } from './element/element.component';
 import { ElementTypeComponent } from './element-type/element-type.component';
 
 @NgModule({
@@ -75,7 +75,7 @@ import { ElementTypeComponent } from './element-type/element-type.component';
     VendorComponent,
     PartyMasterComponent,
     MixtureComponent,
-    ElementDetailsComponent,
+    ElementComponent,
     ElementTypeComponent
   ],
   imports: [

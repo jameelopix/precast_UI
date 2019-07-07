@@ -16,7 +16,7 @@ import { VendorComponent } from "./vendor/vendor.component";
 import { PartyMasterComponent } from "./party-master/party-master.component";
 import { MixdesignComponent } from "./mixdesign/mixdesign.component";
 import { MixtureComponent } from "./mixture/mixture.component";
-import { ElementDetailsComponent } from "./element-details/element-details.component";
+import { ElementComponent } from "./element/element.component";
 import { ElementTypeComponent } from "./element-type/element-type.component";
 
 const routes: Routes = [
@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: "login", component: LoginComponent },
   { path: "projectpage", component: ProjectComponent },
   { path: "elementtypepage", component: ElementTypeComponent },
-  { path: "elementpage", component: ElementDetailsComponent },
+  { path: "elementpage", component: ElementComponent },
   { path: "rawmaterialpage", component: RawMaterialComponent },
   { path: "castingpage", component: CastingActivityComponent },
   { path: "pdfpage", component: PdfComponent },

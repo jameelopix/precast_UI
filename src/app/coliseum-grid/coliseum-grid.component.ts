@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { log } from "util";
 import { GridService } from "../services/grid.service";
+import { MenuItem } from "primeng/components/common/menuitem";
 
 @Component({
   selector: "cui-grid",
@@ -15,6 +16,9 @@ export class ColiseumGridComponent implements OnInit {
   childValue: any[] = [];
 
   @Input()
+  childValue2: any[] = [];
+
+  @Input()
   options: any = {};
 
   constructor(private gridService: GridService) {}
@@ -23,6 +27,22 @@ export class ColiseumGridComponent implements OnInit {
 
   lazyLoad(event) {
     this.options.getCallback();
+  }
+
+  getActions(options, rowData): MenuItem[] {
+    let value = rowData;
+
+    let menuItems: MenuItem[] = [];
+    options.actions.forEach(element => {
+      let menuItem: MenuItem = {};
+      menuItem.label = element.label;
+      menuItem.icon = element.icon;
+      menuItem.command = e => element.action(value);
+
+      menuItems.push(menuItem);
+    });
+
+    return menuItems;
   }
 
   // getColSpan_emptyMsg(options) {

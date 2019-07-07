@@ -1,18 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { PurchaseOrderDTO } from "../model/purchase-order-dto";
-import { ClientService } from "../client.service";
-import { GridService } from "../services/grid.service";
-import { OrderItemService } from "../services/order-item.service";
-import { OrderItemDTO } from "../model/order-item-dto";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { VendorService } from "../services/vendor.service";
-import { PurchaseOrderService } from "../services/purchase-order.service";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { PurchaseRegisterService } from "../services/purchase-register.service";
 import { MessageUtilService } from "../services/message-util.service";
-
-const DELETE_URL: string = "deletePurchaseOrder";
-const GET_URL: string = "getPurchaseOrder";
-const SAVE_URL: string = "createPurchaseOrder";
-const UPDATE_URL: string = "updatePurchaseOrder";
+import { MESSAGES } from "../model/messages";
+import { CompanyService } from "../services/company.service";
+import { UIService } from "../services/ui.service";
+import { VendorService } from "../services/vendor.service";
 
 @Component({
   selector: "app-purchase-register",
@@ -20,28 +13,25 @@ const UPDATE_URL: string = "updatePurchaseOrder";
   styleUrls: ["./purchase-register.component.css"]
 })
 export class PurchaseRegisterComponent implements OnInit {
-  purchaseOrderDTOList: PurchaseOrderDTO[] = [];
-  purchaseOrderDialogVisibilty: boolean = false;
-  purchaseOrderForm: FormGroup;
+  purchaseRegisterDTOList: any[] = [];
+  purchaseRegisterDialogVisibilty: boolean = false;
+  purchaseRegisterForm: FormGroup;
+  purchaseRegisterSearchForm: FormGroup;
 
-  orderItemDTOList: OrderItemDTO[] = [];
-  orderItemDialogVisibilty: boolean = false;
-  orderItemForm: FormGroup;
-
-  vendorDTOList: any[] = [];
+  vendorList: any[] = [];
 
   messages: any[] = [];
 
+  result: any = null;
+
   constructor(
-    private clientService: ClientService,
-    private purchaseOrderService: PurchaseOrderService,
-    private orderItemService: OrderItemService,
+    private purchaseRegisterService: PurchaseRegisterService,
     private vendorService: VendorService,
-    private formBuilder: FormBuilder,
-    private messageUtilService: MessageUtilService
+    private messageUtilService: MessageUtilService,
+    private uiservice: UIService,
+    private formBuilder: FormBuilder
   ) {
-    this.createPurchaseOrderFormGroup();
-    this.createOrderItemFormGroup();
+    this.createFormGroup();
   }
 
   ngOnInit() {
@@ -49,269 +39,165 @@ export class PurchaseRegisterComponent implements OnInit {
   }
 
   fetchReleventData() {
-    this.vendorService.get({}, this.getVendorCallback);
+    this.getVendorDTOList();
   }
 
-  getVendorCallback = (response: any) => {
-    this.vendorDTOList = response.vendorDTOList;
-  };
+  getVendorDTOList() {
+    this.vendorService.get({}, (response: any) => {
+      this.vendorList = response["vendorDTOList"];
+    });
+  }
 
-  createPurchaseOrderFormGroup() {
-    this.purchaseOrderForm = this.formBuilder.group({
+  createFormGroup() {
+    this.purchaseRegisterForm = this.formBuilder.group({
       id: [null],
-      vendorId: [""],
-      purchaseOrderNo: [""],
-      purchaseDate: [new Date()]
+      vendorDTOId: ["", Validators.required],
+      weighBridgeNo: ["", Validators.required]
+    });
+
+    this.purchaseRegisterSearchForm = this.formBuilder.group({
+      vendorIdList: [""],
+      weighBridgeNoList: [""]
     });
   }
 
-  createOrderItemFormGroup() {
-    this.orderItemForm = this.formBuilder.group({
-      // vendorName: [""],
-      // poNo: [""],
-      // date: [new Date()]
-    });
-  }
-
-  childget = () => {
-    console.log("CHILD GET.");
+  addPurchaseRegister = () => {
+    this.purchaseRegisterForm.reset();
+    this.purchaseRegisterDialogVisibilty = true;
   };
 
-  deleteOrderItem = (id: number) => {
-    console.log("CHILD deleteOrderItem.");
+  editPurchaseRegister = rowData => {
+    this.populatePurchaseRegisterForm(rowData, false);
+    this.purchaseRegisterDialogVisibilty = true;
   };
 
-  saveOrderItem = (id: number) => {
-    console.log("CHILD saveOrderItem.");
+  copyPurchaseRegister = rowData => {
+    this.populatePurchaseRegisterForm(rowData);
+    this.purchaseRegisterDialogVisibilty = true;
   };
 
-  getOrderItem = parentValue => {
-    // this.parentValue
-    let request = {};
-    if (parentValue) {
-      request = {
-        orderItemSearchDTO: {
-          purchaseOrderIdList: [parentValue.id]
-        }
-      };
+  populatePurchaseRegisterForm(rowData: any, makeIdNull: boolean = true) {
+    this.purchaseRegisterForm.reset();
+
+    let id = null;
+    if (!makeIdNull) {
+      id = rowData["id"];
     }
-    this.orderItemService.get(request, this.getOrderItemCallback);
-  };
 
-  getOrderItemCallback = (response: any) => {
-    this.orderItemDTOList = response.orderItemDTOList;
-  };
+    let formValue = {
+      id: id,
+      vendorDTOId: { id: rowData["vendorDTOId"] },
+      weighBridgeNo: rowData["weighBridgeNo"]
+    };
 
-  orderItemsOptions: any = {
-    caption: "Order Item Details",
-    saveCallback: this.saveOrderItem,
-    getCallback: this.getOrderItem,
-    deleteCallback: this.deleteOrderItem,
-    columns: [
-      {
-        name: "Item Name",
-        index: "itemName"
-        // type: "select",
-        // selectOptions: this.itemNameSelectOptions
-        // width: "300px"
-      },
-      {
-        name: "Quantity",
-        index: "quantity",
-        type: "textInput"
-        // width: "300px"
-      },
-      {
-        name: "Rate",
-        index: "rate",
-        type: "textInput"
-        // width: "300px"
-      },
-      {
-        name: "Unit",
-        index: "unitType"
-        // type: "select",
-        // selectOptions: this.unitTypeSelectOptions
-        // width: "300px"
-      }
-    ]
-  };
+    this.purchaseRegisterForm.setValue(formValue);
+  }
 
-  ////////////////////////////////////////
-  // Purchase Order Section
-  ////////////////////////////////////////
-  savePurchaseOrder = () => {
-    console.log("Inside savePurchaseOrder");
+  savePurchaseRegister = () => {
     this.messageUtilService.clearMessage(this.messages);
-    let formData = this.purchaseOrderForm.getRawValue();
-
-    let url = SAVE_URL;
-    if (formData["id"]) {
-      url = UPDATE_URL;
-    }
+    let formData = this.purchaseRegisterForm.getRawValue();
 
     let request = {
-      purchaseOrderDTO: {
+      purchaseRegisterDTO: {
         id: formData["id"],
-        vendorId: formData["vendorId"],
-        purchaseOrderNo: formData["purchaseOrderNo"],
-        purchaseDate: formData["purchaseDate"]
+        vendorDTOId: formData["vendorDTOId"]["id"],
+        weighBridgeNo: formData["weighBridgeNo"]
       }
     };
 
-    this.purchaseOrderService.save(
+    this.purchaseRegisterService.save(
       request,
-      this.savePurchaseOrderSuccessCallback,
-      this.savePurchaseOrderErrorCallback
+      this.savePurchaseRegisterSuccessCallback,
+      this.savePurchaseRegisterErrorCallback
     );
   };
 
-  savePurchaseOrderSuccessCallback = (response: any) => {
-    this.getPurchaseOrder();
-  };
-
-  savePurchaseOrderErrorCallback = (response: any) => {
-    this.messageUtilService.showErrorMessages(this.messages, response[0]);
-  };
-
-  issueOrder = rowData => {
-    this.messageUtilService.clearMessage(this.messages);
-    this.purchaseOrderService.issuePurchaseOrder(
-      rowData["id"],
-      this.issuePurchaseOrderSuccessCallback,
-      this.issuePurchaseOrderErrorCallback
-    );
-  };
-
-  issuePurchaseOrderSuccessCallback = (response: any) => {
+  savePurchaseRegisterSuccessCallback = (response: any) => {
     this.messageUtilService.showSuccessMessages(
       this.messages,
-      "Order have been issued Successfully!!!"
+      MESSAGES.SAVE_ACK_MSG
     );
+    this.purchaseRegisterDialogVisibilty = false;
+    this.getPurchaseRegister();
   };
 
-  issuePurchaseOrderErrorCallback = (response: any) => {
+  savePurchaseRegisterErrorCallback = (response: any) => {
     this.messageUtilService.showErrorMessages(this.messages, response[0]);
   };
 
-  closeOrder = rowData => {
+  cancelPurchaseRegister = () => {
+    this.purchaseRegisterForm.reset();
+    this.purchaseRegisterDialogVisibilty = false;
+  };
+
+  getPurchaseRegister = () => {
+    let searchFormData = this.purchaseRegisterSearchForm.getRawValue();
+
+    let request = {
+      purchaseRegisterSearchDTO: {
+        vendorIdList: this.uiservice.getSearchData(
+          searchFormData,
+          "vendorIdList"
+        ),
+        weighBridgeNoList: this.uiservice.getSearchData(
+          searchFormData,
+          "weighBridgeNoList"
+        ),
+        vendorNeeded: true
+      }
+    };
+
+    this.purchaseRegisterDTOList = [];
+    this.purchaseRegisterService.get(request, this.getPurchaseRegisterCallback);
+  };
+
+  getPurchaseRegisterCallback = (response: any) => {
+    this.purchaseRegisterDTOList = response.purchaseRegisterDTOList;
+  };
+
+  deletePurchaseRegister = rowData => {
     this.messageUtilService.clearMessage(this.messages);
-    this.purchaseOrderService.closePurchaseOrder(
+
+    this.purchaseRegisterService.delete(
       rowData["id"],
-      this.closePurchaseOrderSuccessCallback,
-      this.closePurchaseOrderErrorCallback
+      this.deletePurchaseRegisterSuccessCallback,
+      this.deletePurchaseRegisterErrorCallback
     );
   };
 
-  closePurchaseOrderSuccessCallback = (response: any) => {
+  deletePurchaseRegisterSuccessCallback = (response: any) => {
     this.messageUtilService.showSuccessMessages(
       this.messages,
-      "Order have been closed Successfully!!!"
+      MESSAGES.DELETE_ACK_MSG
     );
+    this.getPurchaseRegister();
   };
 
-  closePurchaseOrderErrorCallback = (response: any) => {
+  deletePurchaseRegisterErrorCallback = (response: any) => {
     this.messageUtilService.showErrorMessages(this.messages, response[0]);
   };
 
-  cancelPurchaseOrder() {
-    this.messageUtilService.clearMessage(this.messages);
-    this.purchaseOrderForm.reset();
-    this.purchaseOrderDialogVisibilty = false;
-  }
-
-  editPurchaseOrder = rowData => {
-    console.log("Inside editPurchaseOrder");
-    console.log("PurchaseOrder:" + JSON.stringify(rowData));
-    this.messageUtilService.clearMessage(this.messages);
-    // this.purchaseOrderForm.setValue(rowData);
-    this.purchaseOrderDialogVisibilty = true;
-  };
-
-  addPurchaseOrder = () => {
-    console.log("Inside addPurchaseOrder");
-    this.purchaseOrderForm.reset();
-    this.purchaseOrderDialogVisibilty = true;
-  };
-
-  exportPurchaseOrder = () => {
-    console.log("Inside exportPurchaseOrder");
-  };
-  copyPurchaseOrder = rowData => {
-    console.log("Inside copyPurchaseOrder");
-    this.messageUtilService.clearMessage(this.messages);
-    this.purchaseOrderForm.setValue(rowData);
-    this.purchaseOrderForm.setValue({ id: null });
-    this.purchaseOrderDialogVisibilty = true;
-  };
-
-  getPurchaseOrder = () => {
-    console.log("Inside getPurchaseOrder");
-    this.messageUtilService.clearMessage(this.messages);
-
-    this.purchaseOrderService.get({}, this.getPurchaseOrderCallback);
-  };
-
-  getPurchaseOrderCallback = (response: any) => {
-    this.purchaseOrderDTOList = response.purchaseOrderDTOList;
-  };
-
-  deletePurchaseOrder = rowData => {
-    console.log("Inside deletePurchaseOrder");
-    this.messageUtilService.clearMessage(this.messages);
-
-    this.purchaseOrderService.delete(
-      rowData["id"],
-      this.deletePurchaseOrderSuccessCallback,
-      this.deletePurchaseOrderErrorCallback
-    );
-  };
-
-  deletePurchaseOrderSuccessCallback = (response: any) => {
-    this.getPurchaseOrder();
-  };
-
-  deletePurchaseOrderErrorCallback = (response: any) => {
-    this.messageUtilService.showErrorMessages(this.messages, response[0]);
-  };
-
-  actionItems = [
-    {
-      label: "Issue",
-      icon: "pi pi-fw pi-plus",
-      action: this.issueOrder
-    },
-    {
-      label: "Close",
-      icon: "pi pi-fw pi-plus",
-      action: this.closeOrder
-    }
-  ];
-
-  purchaseOrderOptions: any = {
-    caption: "Purchase Order",
-    addCallback: this.addPurchaseOrder,
-    // exportCallback: this.exportPurchaseOrder,
-    editCallback: this.editPurchaseOrder,
-    copyCallback: this.copyPurchaseOrder,
-    getCallback: this.getPurchaseOrder,
-    deleteCallback: this.deletePurchaseOrder,
-    // actions: this.actionItems,
+  purchaseRegisterOptions: any = {
+    caption: "PurchaseRegister Details",
+    addCallback: this.addPurchaseRegister,
+    editCallback: this.editPurchaseRegister,
+    copyCallback: this.copyPurchaseRegister,
+    getCallback: this.getPurchaseRegister,
+    deleteCallback: this.deletePurchaseRegister,
     childPresent: true,
-    childGridOptions: [this.orderItemsOptions],
     columns: [
       {
-        name: "Purchase Order No",
-        index: "purchaseOrderNo",
-        type: "textInput"
-        // width: "45%"
+        name: "Vendor Name",
+        index: "vendorDTO.name"
       },
       {
-        name: "Date",
-        index: "purchaseDate",
-        type: "date"
-        // width: "45%"
+        name: "Weigh Bridge No",
+        index: "weighBridgeNo"
       }
     ]
   };
+
+  getControl(field: any) {
+    return this.purchaseRegisterForm.controls[field];
+  }
 }

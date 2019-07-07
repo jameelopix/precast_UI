@@ -1,1 +1,279 @@
-<grid [values]=purchaseOrderDTOList [messages]="messages" [childvalue1]=orderItemDTOList [options]=purchaseOrderOptions></grid>
+<form [formGroup]="purchaseOrderSearchForm">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-sm-6">
+          <label>Vendor</label>
+          <p-dropdown
+            id="vendorDTOIdList"
+            [options]="vendorList"
+            formControlName="vendorDTOIdList"
+            dataKey="id"
+            inputId="id"
+            placeholder="Select Vendor"
+            optionLabel="name"
+            appendTo="body"
+            [style]="{ width: '100%', height: '40px' }"
+            showClear="true"
+          >
+          </p-dropdown>
+        </div>
+        <div class="form-group col-sm-6">
+          <label>Status</label>
+          <p-dropdown
+            id="purchaseOrderStatusList"
+            [options]="statusList"
+            formControlName="purchaseOrderStatusList"
+            dataKey="id"
+            inputId="id"
+            placeholder="Select Status"
+            optionLabel="name"
+            appendTo="body"
+            [style]="{ width: '100%', height: '40px' }"
+            showClear="true"
+          >
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button
+            class="btn btn-primary btn-sm btm-space float-right"
+            (click)="getPurchaseOrder()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<p-messages [(value)]="messages"></p-messages>
+
+<cui-grid
+  [values]="purchaseOrderDTOList"
+  [childValue]="purchaseOrderItemDTOList"
+  [options]="purchaseOrderOptions"
+></cui-grid>
+
+<p-dialog [(visible)]="purchaseOrderDialogVisibilty" [width]="500">
+  <p-header>
+    Purchase Order
+  </p-header>
+  <form [formGroup]="purchaseOrderForm">
+    <div class="form-group">
+      <label for="vendorDTOId">Vendor</label>
+      <p-dropdown
+        id="vendorDTOId"
+        [options]="vendorList"
+        formControlName="vendorDTOId"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Vendor"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('vendorDTOId').errors &&
+          (getControl('vendorDTOId').dirty || getControl('vendorDTOId').touched)
+        "
+      >
+        <p *ngIf="getControl('vendorDTOId').errors.required">
+          Vendor is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="purchaseOrderNo">Purchase Order</label>
+      <input
+        class="form-control"
+        name="purchaseOrderNo"
+        id="purchaseOrderNo"
+        type="text"
+        formControlName="purchaseOrderNo"
+        style="width: 100%"
+      />
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('purchaseOrderNo').errors &&
+          (getControl('purchaseOrderNo').dirty ||
+            getControl('purchaseOrderNo').touched)
+        "
+      >
+        <p *ngIf="getControl('purchaseOrderNo').errors.required">
+          Order No. is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="name">Date</label>
+      <p-calendar
+        formControlName="purchaseDate"
+        [style]="{ width: '100%' }"
+        appendTo="body"
+      >
+      </p-calendar>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('purchaseDate').errors &&
+          (getControl('purchaseDate').dirty ||
+            getControl('purchaseDate').touched)
+        "
+      >
+        <p *ngIf="getControl('purchaseDate').errors.required">
+          Date is required
+        </p>
+      </div>
+    </div>
+  </form>
+  <p-footer>
+    <div class="btn-toolbar">
+      <button
+        class="btn btn-sm btn-success"
+        type="button"
+        [disabled]="purchaseOrderForm.invalid"
+        (click)="savePurchaseOrder()"
+      >
+        <i class="pi pi-save">Save</i>
+      </button>
+      <button
+        class="btn btn-sm btn-default"
+        type="button"
+        (click)="cancelPurchaseOrder()"
+      >
+        <i class="pi pi-times">Cancel</i>
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="purchaseOrderItemDialogVisibilty" [width]="500">
+  <p-header>
+    Purchase Order Item
+  </p-header>
+  <form [formGroup]="purchaseOrderItemForm">
+    <div class="form-group">
+      <label for="itemName">Item</label>
+      <p-dropdown
+        id="itemName"
+        [options]="rawMaterialDTOList"
+        formControlName="itemName"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Item"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getOrderControl('itemName').errors &&
+          (getOrderControl('itemName').dirty ||
+            getOrderControl('itemName').touched)
+        "
+      >
+        <p *ngIf="getOrderControl('itemName').errors.required">
+          Item is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="unit">Unit</label>
+      <p-dropdown
+        id="unit"
+        [options]="unitList"
+        formControlName="unit"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Unit"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getOrderControl('unit').errors &&
+          (getOrderControl('unit').dirty || getOrderControl('unit').touched)
+        "
+      >
+        <p *ngIf="getOrderControl('unit').errors.required">
+          Unit is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="quantity">Quantity</label>
+      <input
+        class="form-control"
+        name="quantity"
+        id="quantity"
+        type="text"
+        formControlName="quantity"
+        style="width: 100%"
+      />
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getOrderControl('quantity').errors &&
+          (getOrderControl('quantity').dirty ||
+            getOrderControl('quantity').touched)
+        "
+      >
+        <p *ngIf="getOrderControl('quantity').errors.required">
+          Quantity is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="rate">Rate</label>
+      <input
+        class="form-control"
+        name="rate"
+        id="rate"
+        type="text"
+        formControlName="rate"
+        style="width: 100%"
+      />
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getOrderControl('rate').errors &&
+          (getOrderControl('rate').dirty || getOrderControl('rate').touched)
+        "
+      >
+        <p *ngIf="getOrderControl('rate').errors.required">
+          Rate is required
+        </p>
+      </div>
+    </div>
+  </form>
+  <p-footer>
+    <div class="btn-toolbar">
+      <button
+        class="btn btn-sm btn-success"
+        type="button"
+        [disabled]="purchaseOrderItemForm.invalid"
+        (click)="savePurchaseOrderItem()"
+      >
+        <i class="pi pi-save">Save</i>
+      </button>
+      <button
+        class="btn btn-sm btn-default"
+        type="button"
+        (click)="cancelPurchaseOrderItem()"
+      >
+        <i class="pi pi-times">Cancel</i>
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
