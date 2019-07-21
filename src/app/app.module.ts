@@ -49,6 +49,7 @@ import { PartyMasterComponent } from './party-master/party-master.component';
 import { MixtureComponent } from './mixture/mixture.component';
 import { ElementComponent } from './element/element.component';
 import { ElementTypeComponent } from './element-type/element-type.component';
+import { ItemAmountDetailsComponent } from './item-amount-details/item-amount-details.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { ElementTypeComponent } from './element-type/element-type.component';
     PartyMasterComponent,
     MixtureComponent,
     ElementComponent,
-    ElementTypeComponent
+    ElementTypeComponent,
+    ItemAmountDetailsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,183 @@
+<form [formGroup]="itemAmountDetailsSearchForm">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-sm-6">
+          <label>Vendor</label>
+          <p-dropdown
+            id="vendorList"
+            [options]="vendorList"
+            formControlName="vendorDTOIdList"
+            dataKey="id"
+            inputId="id"
+            placeholder="Select Vendor"
+            optionLabel="name"
+            appendTo="body"
+            [style]="{ width: '100%', height: '40px' }"
+            showClear="true"
+          >
+          </p-dropdown>
+        </div>
+        <div class="form-group col-sm-6">
+          <label>DC</label>
+          <p-dropdown
+            id="purchaseRegisterDTOList"
+            [options]="purchaseRegisterDTOList"
+            formControlName="dcNoList"
+            dataKey="id"
+            inputId="id"
+            placeholder="Select DC"
+            optionLabel="weighBridgeNo"
+            appendTo="body"
+            [style]="{ width: '100%', height: '40px' }"
+            showClear="true"
+          >
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button
+            class="btn btn-primary btn-sm btm-space float-right"
+            (click)="getItemAmountDetails()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<p-messages [(value)]="messages"></p-messages>
+
+<cui-grid
+  [values]="itemAmountDetailsDTOList"
+  [options]="itemAmountDetailsOptions"
+></cui-grid>
+
+<p-dialog [(visible)]="itemAmountDetailsDialogVisibilty" [width]="500">
+  <p-header>
+    Item Amount Details
+  </p-header>
+  <form [formGroup]="itemAmountDetailsForm">
+    <div class="form-group">
+      <label for="vendorDTOId">Vendor</label>
+      <p-dropdown
+        id="vendorDTOId"
+        [options]="vendorList"
+        formControlName="vendorDTOId"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Vendor"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('vendorDTOId').errors &&
+          (getControl('vendorDTOId').dirty || getControl('vendorDTOId').touched)
+        "
+      >
+        <p *ngIf="getControl('vendorDTOId').errors.required">
+          Vendor is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="accType">Account Type</label>
+      <p-dropdown
+        id="accType"
+        [options]="accTypeList"
+        formControlName="accountType"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Account Type"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('accountType').errors &&
+          (getControl('accountType').dirty || getControl('accountType').touched)
+        "
+      >
+        <p *ngIf="getControl('accountType').errors.required">
+          Type is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="bank">Bank</label>
+      <p-dropdown
+        id="bank"
+        [options]="bankList"
+        formControlName="bankName"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Bank"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+    </div>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        class="form-control"
+        name="name"
+        id="name"
+        type="text"
+        formControlName="accountName"
+        style="width: 100%"
+      />
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('accountName').errors &&
+          (getControl('accountName').dirty || getControl('accountName').touched)
+        "
+      >
+        <p *ngIf="getControl('accountName').errors.required">
+          Name is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="accNo">Account No.</label>
+      <input
+        class="form-control"
+        name="accNo"
+        id="accNo"
+        type="text"
+        formControlName="accountNumber"
+        style="width: 100%"
+      />
+    </div>
+  </form>
+  <p-footer>
+    <div class="btn-toolbar">
+      <button
+        class="btn btn-sm btn-success"
+        type="button"
+        [disabled]="itemAmountDetailsForm.invalid"
+        (click)="saveItemAmountDetails()"
+      >
+        <i class="pi pi-save">Save</i>
+      </button>
+      <button
+        class="btn btn-sm btn-default"
+        type="button"
+        (click)="cancelItemAmountDetails()"
+      >
+        <i class="pi pi-times">Cancel</i>
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

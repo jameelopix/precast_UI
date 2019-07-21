@@ -47,6 +47,7 @@
 
 <cui-grid
   [values]="purchaseRegisterDTOList"
+  [childValue]="purchaseRegisterItemDTOList"
   [options]="purchaseRegisterOptions"
 ></cui-grid>
 
@@ -119,6 +120,224 @@
         class="btn btn-sm btn-default"
         type="button"
         (click)="cancelPurchaseRegister()"
+      >
+        <i class="pi pi-times">Cancel</i>
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="purchaseRegisterItemDialogVisibilty" [width]="500">
+  <p-header>
+    Purchase Register Item
+  </p-header>
+  <form [formGroup]="purchaseRegisterItemForm">
+    <div class="form-group">
+      <label for="vendorId">Vendor</label>
+      <p-dropdown
+        id="vendorId"
+        [options]="vendorList"
+        formControlName="vendorId"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Vendor"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+        (onChange)="onVendorChange($event)"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getItemControl('vendorId').errors &&
+          (getItemControl('vendorId').dirty ||
+            getItemControl('vendorId').touched)
+        "
+      >
+        <p *ngIf="getItemControl('vendorId').errors.required">
+          Vendor is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="purchaseOrderDTOId">Purchase Order</label>
+      <p-dropdown
+        id="purchaseOrderDTOId"
+        [options]="purchaseOrderList"
+        formControlName="purchaseOrderDTOId"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Order No."
+        optionLabel="purchaseOrderNo"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+        (onChange)="onPurchaseOrderChange($event)"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getItemControl('purchaseOrderDTOId').errors &&
+          (getItemControl('purchaseOrderDTOId').dirty ||
+            getItemControl('purchaseOrderDTOId').touched)
+        "
+      >
+        <p *ngIf="getItemControl('purchaseOrderDTOId').errors.required">
+          Order No. is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="purchaseOrderItemDTOId">Purchase Item Order</label>
+      <p-dropdown
+        id="purchaseOrderItemDTOId"
+        [options]="purchaseOrderItemList"
+        formControlName="purchaseOrderItemDTOId"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Item"
+        optionLabel="itemName"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getItemControl('purchaseOrderItemDTOId').errors &&
+          (getItemControl('purchaseOrderItemDTOId').dirty ||
+            getItemControl('purchaseOrderItemDTOId').touched)
+        "
+      >
+        <p *ngIf="getItemControl('purchaseOrderItemDTOId').errors.required">
+          Item is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="dcQuantity">DC</label>
+      <div class="ui-inputgroup">
+        <input
+          class="form-control col-9"
+          name="dcQuantity"
+          id="dcQuantity"
+          type="text"
+          formControlName="dcQuantity"
+          style="width: 100%"
+        />
+        <p-dropdown
+          class="col-3 p-0 m-0"
+          id="dcUnit"
+          [options]="unitList"
+          formControlName="dcUnit"
+          dataKey="id"
+          inputId="id"
+          placeholder="Select Unit"
+          optionLabel="name"
+          appendTo="body"
+          [style]="{ width: '100%', height: '40px' }"
+          (onChange)="onUnitChange($event)"
+        >
+        </p-dropdown>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="weighBridgeQuantity">Weigh Bridge</label>
+      <div class="ui-inputgroup">
+        <input
+          class="form-control col-9"
+          name="weighBridgeQuantity"
+          id="weighBridgeQuantity"
+          type="text"
+          formControlName="weighBridgeQuantity"
+          style="width: 100%"
+        />
+        <p-dropdown
+          class="col-3 p-0 m-0"
+          id="weighBridgeUnit"
+          [options]="unitList"
+          formControlName="weighBridgeUnit"
+          dataKey="id"
+          inputId="id"
+          placeholder="Select Unit"
+          optionLabel="name"
+          appendTo="body"
+          [style]="{ width: '100%', height: '40px' }"
+          (onChange)="onUnitChange($event)"
+        >
+        </p-dropdown>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="deductionQuantity">Deduction</label>
+      <div class="ui-inputgroup">
+        <input
+          class="form-control col-9"
+          name="deductionQuantity"
+          id="deductionQuantity"
+          type="text"
+          formControlName="deductionQuantity"
+          style="width: 100%"
+        />
+        <p-dropdown
+          class="col-3 p-0 m-0"
+          id="deductionUnit"
+          [options]="unitList"
+          formControlName="deductionUnit"
+          dataKey="id"
+          inputId="id"
+          placeholder="Select Unit"
+          optionLabel="name"
+          appendTo="body"
+          [style]="{ width: '100%', height: '40px' }"
+          (onChange)="onUnitChange($event)"
+        >
+        </p-dropdown>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="netQuantity">Net</label>
+      <div class="ui-inputgroup">
+        <input
+          class="form-control col-9"
+          name="netQuantity"
+          id="netQuantity"
+          type="text"
+          formControlName="netQuantity"
+          style="width: 100%"
+        />
+        <p-dropdown
+          class="col-3 p-0 m-0"
+          id="netUnit"
+          [options]="unitList"
+          formControlName="netUnit"
+          dataKey="id"
+          inputId="id"
+          placeholder="Select Unit"
+          optionLabel="name"
+          appendTo="body"
+          [style]="{ width: '100%', height: '40px' }"
+          (onChange)="onUnitChange($event)"
+        >
+        </p-dropdown>
+      </div>
+    </div>
+  </form>
+  <p-footer>
+    <div class="btn-toolbar">
+      <button
+        class="btn btn-sm btn-success"
+        type="button"
+        [disabled]="purchaseRegisterItemForm.invalid"
+        (click)="savePurchaseRegisterItem()"
+      >
+        <i class="pi pi-save">Save</i>
+      </button>
+      <button
+        class="btn btn-sm btn-default"
+        type="button"
+        (click)="cancelPurchaseRegisterItem()"
       >
         <i class="pi pi-times">Cancel</i>
       </button>

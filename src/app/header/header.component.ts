@@ -25,8 +25,16 @@ export class HeaderComponent implements OnInit {
             icon: "pi pi-fw pi-plus",
             routerLink: "/purchaseorder"
           },
-          { label: "Purchase Register", routerLink: "/purchaseregister" },
-          { label: "Inward Register" }
+          {
+            label: "Purchase Register",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/purchaseregister"
+          },
+          {
+            label: "Inward Register",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/inwardpage"
+          }
         ]
       },
       {
