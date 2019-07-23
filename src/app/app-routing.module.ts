@@ -19,6 +19,7 @@ import { MixtureComponent } from "./mixture/mixture.component";
 import { ElementComponent } from "./element/element.component";
 import { ElementTypeComponent } from "./element-type/element-type.component";
 import { ItemAmountDetailsComponent } from "./item-amount-details/item-amount-details.component";
+import { ProductionPlanReportComponent } from "./production-plan-report/production-plan-report.component";
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: "partymaster", component: PartyMasterComponent },
   { path: "mixdesignpage", component: MixtureComponent },
   { path: "inwardpage", component: ItemAmountDetailsComponent },
+  { path: "productionReport", component: ProductionPlanReportComponent },
   { path: "**", component: LoginComponent }
   // ,
   // { path: 'elementdetailspage', component: ElementDetailsComponent },

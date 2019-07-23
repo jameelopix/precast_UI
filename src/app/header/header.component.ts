@@ -38,6 +38,16 @@ export class HeaderComponent implements OnInit {
         ]
       },
       {
+        label: "Report",
+        items: [
+          {
+            label: "Production Plan",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/productionReport"
+          }
+        ]
+      },
+      {
         label: "Cash & Bank",
         icon: "pi pi-fw pi-pencil",
         items: [

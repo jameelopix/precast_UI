@@ -50,6 +50,7 @@ import { MixtureComponent } from './mixture/mixture.component';
 import { ElementComponent } from './element/element.component';
 import { ElementTypeComponent } from './element-type/element-type.component';
 import { ItemAmountDetailsComponent } from './item-amount-details/item-amount-details.component';
+import { ProductionPlanReportComponent } from './production-plan-report/production-plan-report.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { ItemAmountDetailsComponent } from './item-amount-details/item-amount-de
     MixtureComponent,
     ElementComponent,
     ElementTypeComponent,
-    ItemAmountDetailsComponent
+    ItemAmountDetailsComponent,
+    ProductionPlanReportComponent
   ],
   imports: [
     BrowserModule,

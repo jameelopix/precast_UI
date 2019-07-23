@@ -1,0 +1,71 @@
+<form [formGroup]="productionPlanReportDTOSearchForm">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <label>Project</label>
+          <p-dropdown
+            id="projectIdList"
+            [options]="projectDTOList"
+            formControlName="projectIdList"
+            dataKey="id"
+            inputId="id"
+            placeholder="Select Project"
+            optionLabel="name"
+            appendTo="body"
+            [style]="{ width: '100%', height: '40px' }"
+            showClear="true"
+          >
+          </p-dropdown>
+        </div>
+        <div class="form-group col-sm-4">
+          <label>Type</label>
+          <p-dropdown
+            id="elementTypeIdList"
+            [options]="elementTypeDTOList"
+            formControlName="elementTypeIdList"
+            dataKey="id"
+            inputId="id"
+            placeholder="Select Type"
+            optionLabel="name"
+            appendTo="body"
+            [style]="{ width: '100%', height: '40px' }"
+            showClear="true"
+          >
+          </p-dropdown>
+        </div>
+        <div class="form-group col-sm-4">
+          <label>Element</label>
+          <p-dropdown
+            id="elementIdList"
+            [options]="elementDTOList"
+            formControlName="elementIdList"
+            dataKey="id"
+            inputId="id"
+            placeholder="Select Element"
+            optionLabel="name"
+            appendTo="body"
+            [style]="{ width: '100%', height: '40px' }"
+            showClear="true"
+          >
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button
+            class="btn btn-primary btn-sm btm-space float-right"
+            (click)="getProductionPlanReportDTO()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<cui-grid
+  [values]="productionPlanReportDTOList"
+  [options]="productionPlanReportDTOOptions"
+></cui-grid>
