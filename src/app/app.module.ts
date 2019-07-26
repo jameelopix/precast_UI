@@ -51,6 +51,9 @@ import { ElementComponent } from './element/element.component';
 import { ElementTypeComponent } from './element-type/element-type.component';
 import { ItemAmountDetailsComponent } from './item-amount-details/item-amount-details.component';
 import { ProductionPlanReportComponent } from './production-plan-report/production-plan-report.component';
+import { SubContractorComponent } from './sub-contractor/sub-contractor.component';
+import { LabourRateComponent } from './labour-rate/labour-rate.component';
+import { LabourWorkEntryComponent } from './labour-work-entry/labour-work-entry.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +83,10 @@ import { ProductionPlanReportComponent } from './production-plan-report/producti
     ElementComponent,
     ElementTypeComponent,
     ItemAmountDetailsComponent,
-    ProductionPlanReportComponent
+    ProductionPlanReportComponent,
+    SubContractorComponent,
+    LabourRateComponent,
+    LabourWorkEntryComponent
   ],
   imports: [
     BrowserModule,

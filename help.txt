@@ -1,2 +1,15 @@
-ng build --base-href /testautomation/ --prod
+--------------------------------------------
+Build Project
+--------------------------------------------
+ng build --base-href /precast/ --prod
+
+--------------------------------------------
+Component Generation
+--------------------------------------------
+ng generate component 
+
+--------------------------------------------
+Service Generation
+--------------------------------------------
+ng generate service services/
 

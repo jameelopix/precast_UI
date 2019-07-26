@@ -55,6 +55,21 @@ export class HeaderComponent implements OnInit {
             label: "Account Details",
             icon: "pi pi-fw pi-plus",
             routerLink: "/accountdetails"
+          },
+          {
+            label: "Sub Contractor",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/subcontractor"
+          },
+          {
+            label: "Labour Rate",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/labourrate"
+          },
+          {
+            label: "Labour Work Entry",
+            icon: "pi pi-fw pi-plus",
+            routerLink: "/labourworkentry"
           }
         ]
       },

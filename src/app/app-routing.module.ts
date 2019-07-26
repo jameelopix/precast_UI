@@ -20,6 +20,9 @@ import { ElementComponent } from "./element/element.component";
 import { ElementTypeComponent } from "./element-type/element-type.component";
 import { ItemAmountDetailsComponent } from "./item-amount-details/item-amount-details.component";
 import { ProductionPlanReportComponent } from "./production-plan-report/production-plan-report.component";
+import { SubContractorComponent } from "./sub-contractor/sub-contractor.component";
+import { LabourWorkEntryComponent } from "./labour-work-entry/labour-work-entry.component";
+import { LabourRateComponent } from "./labour-rate/labour-rate.component";
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -41,6 +44,9 @@ const routes: Routes = [
   { path: "mixdesignpage", component: MixtureComponent },
   { path: "inwardpage", component: ItemAmountDetailsComponent },
   { path: "productionReport", component: ProductionPlanReportComponent },
+  { path: "subcontractor", component: SubContractorComponent },  
+  { path: "labourworkentry", component: LabourWorkEntryComponent },  
+  { path: "labourrate", component: LabourRateComponent },
   { path: "**", component: LoginComponent }
   // ,
   // { path: 'elementdetailspage', component: ElementDetailsComponent },
