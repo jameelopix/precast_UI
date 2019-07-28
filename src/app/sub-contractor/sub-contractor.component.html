@@ -2,11 +2,18 @@
   <div class="card">
     <div class="card-body">
       <div class="row">
-        <div class="form-group col-sm-4">
+        <div class="form-group col-sm-6">
           <label>Code</label>
-          
+          <input
+            class="form-control"
+            name="code"
+            id="code"
+            type="text"
+            formControlName="codeList"
+            style="width: 100%"
+          />
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-sm-6">
           <label>Status</label>
           <p-dropdown
             id="activeList"
@@ -49,104 +56,48 @@
   </p-header>
   <form [formGroup]="subContractorForm">
     <div class="form-group">
-      <label for="companyName">Company</label>
-      <p-dropdown
-        id="companyName"
-        [options]="companyDTOList"
-        formControlName="companyId"
-        dataKey="id"
-        inputId="id"
-        placeholder="Select Company"
-        optionLabel="name"
-        appendTo="body"
-        [style]="{ width: '100%', height: '40px' }"
-      >
-      </p-dropdown>
-      <div
-        class="form-control-feedback"
-        *ngIf="
-          getControl('companyId').errors &&
-          (getControl('companyId').dirty || getControl('companyId').touched)
-        "
-      >
-        <p *ngIf="getControl('companyId').errors.required">
-          Company is required
-        </p>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="accType">Account Type</label>
-      <p-dropdown
-        id="accType"
-        [options]="accTypeList"
-        formControlName="accountType"
-        dataKey="id"
-        inputId="id"
-        placeholder="Select Account Type"
-        optionLabel="name"
-        appendTo="body"
-        [style]="{ width: '100%', height: '40px' }"
-      >
-      </p-dropdown>
-      <div
-        class="form-control-feedback"
-        *ngIf="
-          getControl('accountType').errors &&
-          (getControl('accountType').dirty || getControl('accountType').touched)
-        "
-      >
-        <p *ngIf="getControl('accountType').errors.required">
-          Type is required
-        </p>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="bank">Bank</label>
-      <p-dropdown
-        id="bank"
-        [options]="bankList"
-        formControlName="bankName"
-        dataKey="id"
-        inputId="id"
-        placeholder="Select Bank"
-        optionLabel="name"
-        appendTo="body"
-        [style]="{ width: '100%', height: '40px' }"
-      >
-      </p-dropdown>
-    </div>
-    <div class="form-group">
       <label for="name">Name</label>
       <input
         class="form-control"
         name="name"
         id="name"
         type="text"
-        formControlName="accountName"
+        formControlName="name"
         style="width: 100%"
       />
       <div
         class="form-control-feedback"
         *ngIf="
-          getControl('accountName').errors &&
-          (getControl('accountName').dirty || getControl('accountName').touched)
+          getControl('name').errors &&
+          (getControl('name').dirty || getControl('name').touched)
         "
       >
-        <p *ngIf="getControl('accountName').errors.required">
+        <p *ngIf="getControl('name').errors.required">
           Name is required
         </p>
       </div>
     </div>
     <div class="form-group">
-      <label for="accNo">Account No.</label>
+      <label for="code">Code</label>
       <input
         class="form-control"
-        name="accNo"
-        id="accNo"
+        name="code"
+        id="code"
         type="text"
-        formControlName="accountNumber"
+        formControlName="code"
         style="width: 100%"
       />
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getControl('code').errors &&
+          (getControl('code').dirty || getControl('code').touched)
+        "
+      >
+        <p *ngIf="getControl('code').errors.required">
+          Code is required
+        </p>
+      </div>
     </div>
   </form>
   <p-footer>

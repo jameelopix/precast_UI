@@ -34,7 +34,6 @@ export class SubContractorComponent implements OnInit {
 
   constructor(
     private subContractorService: SubContractorService,
-    private companyService: CompanyService,
     private messageUtilService: MessageUtilService,
     private uiservice: UIService,
     private formBuilder: FormBuilder
@@ -169,6 +168,37 @@ export class SubContractorComponent implements OnInit {
   deleteSubContractorErrorCallback = (response: any) => {
     this.messageUtilService.showErrorMessages(this.messages, response[0]);
   };
+
+  getAddress = () => {
+    // let searchFormData = this.subContractorSearchForm.getRawValue();
+
+    // let request = {
+    //   subContractorSearchDTO: {
+    //     codeList: this.uiservice.getSearchData(searchFormData, "codeList"),
+    //     activeList: this.uiservice.getSearchData(searchFormData, "activeList")
+    //   }
+    // };
+
+    // this.subContractorDTOList = [];
+    // this.subContractorService.get(request, this.getSubContractorCallback);
+  };
+
+  getFinance = () => {
+
+  };
+
+  actionItems = [
+    {
+      label: "Address",
+      icon: "pi pi-fw pi-plus",
+      action: this.getAddress
+    },
+    {
+      label: "Finance",
+      icon: "pi pi-fw pi-plus",
+      action: this.getFinance
+    }
+  ];
 
   subContractorOptions: any = {
     caption: "SubContractor Details",
