@@ -52,7 +52,7 @@
 
 <p-dialog [(visible)]="subContractorDialogVisibilty" [width]="500">
   <p-header>
-    Create
+    Sub Contractor
   </p-header>
   <form [formGroup]="subContractorForm">
     <div class="form-group">
@@ -114,6 +114,165 @@
         class="btn btn-sm btn-default"
         type="button"
         (click)="cancelSubContractor()"
+      >
+        <i class="pi pi-times">Cancel</i>
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="financialDetailDialogVisibilty" [width]="500">
+  <p-header>
+    Finance Detail
+  </p-header>
+  <form [formGroup]="financialDetailForm">
+    <div class="form-group">
+      <label for="gst">GST</label>
+      <input
+        class="form-control"
+        name="gst"
+        id="gst"
+        type="text"
+        formControlName="gst"
+        style="width: 100%"
+      />
+    </div>
+    <div class="form-group">
+      <label for="pan">PAN</label>
+      <input
+        class="form-control"
+        name="pan"
+        id="pan"
+        type="text"
+        formControlName="pan"
+        style="width: 100%"
+      />
+    </div>
+  </form>
+  <p-footer>
+    <div class="btn-toolbar">
+      <button
+        class="btn btn-sm btn-success"
+        type="button"
+        (click)="saveFinancialDetail()"
+      >
+        <i class="pi pi-save">Save</i>
+      </button>
+      <button
+        class="btn btn-sm btn-default"
+        type="button"
+        (click)="cancelFinancialDetail()"
+      >
+        <i class="pi pi-times">Cancel</i>
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="addressDialogVisibilty" [width]="500">
+  <p-header>
+    Address
+  </p-header>
+  <form [formGroup]="addressForm">
+    <div class="form-group">
+      <label for="addressLine1">Address Line</label>
+      <input
+        class="form-control"
+        name="addressLine1"
+        id="addressLine1"
+        type="text"
+        formControlName="addressLine1"
+        style="width: 100%"
+      />
+      <input
+        class="form-control"
+        name="addressLine2"
+        id="addressLine2"
+        type="text"
+        formControlName="addressLine2"
+        style="width: 100%"
+      />
+    </div>
+    <div class="form-group">
+      <label for="landmark">Landmark</label>
+      <input
+        class="form-control"
+        name="landmark"
+        id="landmark"
+        type="text"
+        formControlName="landmark"
+        style="width: 100%"
+      />
+    </div>
+    <div class="form-group">
+      <label for="city">City</label>
+      <input
+        class="form-control"
+        name="city"
+        id="city"
+        type="text"
+        formControlName="city"
+        style="width: 100%"
+      />
+    </div>
+    <div class="form-group">
+      <label for="state">State</label>
+      <input
+        class="form-control"
+        name="state"
+        id="state"
+        type="text"
+        formControlName="state"
+        style="width: 100%"
+      />
+    </div>
+    <div class="form-group">
+      <label for="country">Country</label>
+      <input
+        class="form-control"
+        name="country"
+        id="country"
+        type="text"
+        formControlName="country"
+        style="width: 100%"
+      />
+    </div>
+    <div class="form-group">
+      <label for="pincode">Pincode</label>
+      <input
+        class="form-control"
+        name="pincode"
+        id="pincode"
+        type="text"
+        formControlName="pincode"
+        style="width: 100%"
+      />
+    </div>
+    <div class="form-group">
+      <label for="mobNo">Mobile</label>
+      <input
+        class="form-control"
+        name="mobNo"
+        id="mobNo"
+        type="text"
+        formControlName="mobNo"
+        style="width: 100%"
+      />
+    </div>
+  </form>
+  <p-footer>
+    <div class="btn-toolbar">
+      <button
+        class="btn btn-sm btn-success"
+        type="button"
+        (click)="saveAddress()"
+      >
+        <i class="pi pi-save">Save</i>
+      </button>
+      <button
+        class="btn btn-sm btn-default"
+        type="button"
+        (click)="cancelAddress()"
       >
         <i class="pi pi-times">Cancel</i>
       </button>
