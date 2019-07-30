@@ -216,6 +216,43 @@
       </div>
     </div>
     <div class="form-group">
+      <label for="theoriticalQuantity">Theoritical Quantity</label>
+      <input
+        class="form-control"
+        name="theoriticalQuantity"
+        id="theoriticalQuantity"
+        type="text"
+        formControlName="theoriticalQuantity"
+        style="width: 100%"
+      />
+    </div>
+    <div class="form-group">
+      <label for="unit">Unit</label>
+      <p-dropdown
+        id="unit"
+        [options]="unitList"
+        formControlName="unit"
+        dataKey="id"
+        inputId="id"
+        placeholder="Select Unit"
+        optionLabel="name"
+        appendTo="body"
+        [style]="{ width: '100%', height: '40px' }"
+      >
+      </p-dropdown>
+      <div
+        class="form-control-feedback"
+        *ngIf="
+          getElementControl('unit').errors &&
+          (getElementControl('unit').dirty || getElementControl('unit').touched)
+        "
+      >
+        <p *ngIf="getElementControl('unit').errors.required">
+          Unit is required
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
       <label for="weight">Weight</label>
       <input
         class="form-control"
@@ -321,17 +358,6 @@
         id="theoriticalQuantity"
         type="text"
         formControlName="theoriticalQuantity"
-        style="width: 100%"
-      />
-    </div>
-    <div class="form-group">
-      <label for="actualQuantity">Actual Quantity</label>
-      <input
-        class="form-control"
-        name="actualQuantity"
-        id="actualQuantity"
-        type="text"
-        formControlName="actualQuantity"
         style="width: 100%"
       />
     </div>

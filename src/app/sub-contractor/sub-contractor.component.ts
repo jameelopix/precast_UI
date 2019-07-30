@@ -56,7 +56,7 @@ export class SubContractorComponent implements OnInit {
     this.fetchReleventData();
   }
 
-  fetchReleventData() { }
+  fetchReleventData() {}
 
   createFormGroup() {
     this.subContractorForm = this.formBuilder.group({
@@ -135,7 +135,7 @@ export class SubContractorComponent implements OnInit {
         state: rowData["state"],
         country: rowData["country"],
         mobNo: rowData["mobNo"],
-        pincode: rowData["pincode"],
+        pincode: rowData["pincode"]
       };
     }
 
@@ -240,9 +240,9 @@ export class SubContractorComponent implements OnInit {
     if (addressId) {
       let request = {
         addressSearchDTO: {
-          idList: addressId
+          idList: [addressId]
         }
-      }
+      };
       this.addressService.get(request, this.getAddressSuccessCallback);
     } else {
       this.addressDialogVisibilty = true;
@@ -261,10 +261,13 @@ export class SubContractorComponent implements OnInit {
     if (financialDetailId) {
       let request = {
         financialDetailSearchDTO: {
-          idList: financialDetailId
+          idList: [financialDetailId]
         }
-      }
-      this.financialDetailService.get(request, this.getFinancialDetailSuccessCallback);
+      };
+      this.financialDetailService.get(
+        request,
+        this.getFinancialDetailSuccessCallback
+      );
     } else {
       this.financialDetailDialogVisibilty = true;
     }

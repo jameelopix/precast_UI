@@ -4,7 +4,6 @@ import { ElementService } from "../services/element.service";
 import { ProjectService } from "../services/project.service";
 import { MessageUtilService } from "../services/message-util.service";
 import { MESSAGES } from "../model/messages";
-import { CompanyService } from "../services/company.service";
 import { UIService } from "../services/ui.service";
 import { ElementTypeService } from "../services/element-type.service";
 import { ElementDetailsService } from "../services/element-details.service";
@@ -133,6 +132,8 @@ export class ElementComponent implements OnInit {
       weight: [""],
       length: [""],
       width: [""],
+      theoriticalQuantity: [""],
+      unit: [""],
       thickness: [""]
     });
 
@@ -141,8 +142,7 @@ export class ElementComponent implements OnInit {
       rawMaterialName: ["", Validators.required],
       elementId: [""],
       unit: [""],
-      theoriticalQuantity: [""],
-      actualQuantity: [""]
+      theoriticalQuantity: [""]
     });
 
     this.elementSearchForm = this.formBuilder.group({
@@ -319,7 +319,9 @@ export class ElementComponent implements OnInit {
       weight: rowData["weight"],
       length: rowData["length"],
       width: rowData["width"],
-      thickness: rowData["thickness"]
+      thickness: rowData["thickness"],
+      theoriticalQuantity: rowData["theoriticalQuantity"],
+      unit: rowData["unit"]
     };
 
     this.elementDetailsForm.setValue(formValue);
@@ -339,7 +341,9 @@ export class ElementComponent implements OnInit {
         weight: formData["weight"],
         length: formData["length"],
         width: formData["width"],
-        thickness: formData["thickness"]
+        thickness: formData["thickness"],
+        theoriticalQuantity: formData["theoriticalQuantity"],
+        unit: formData["unit"]["id"]
       }
     };
 
@@ -450,8 +454,7 @@ export class ElementComponent implements OnInit {
       rawMaterialName: { id: rowData["rawMaterialName"] },
       elementId: elementId,
       unit: { id: rowData["unit"] },
-      theoriticalQuantity: rowData["theoriticalQuantity"],
-      actualQuantity: rowData["actualQuantity"]
+      theoriticalQuantity: rowData["theoriticalQuantity"]
     };
 
     this.steelDetailsForm.setValue(formValue);
@@ -469,8 +472,7 @@ export class ElementComponent implements OnInit {
         rawMaterialName: formData["rawMaterialName"]["id"],
         elementId: elementId,
         unit: formData["unit"]["id"],
-        theoriticalQuantity: formData["theoriticalQuantity"],
-        actualQuantity: formData["actualQuantity"]
+        theoriticalQuantity: formData["theoriticalQuantity"]
       }
     };
 
@@ -542,7 +544,7 @@ export class ElementComponent implements OnInit {
   };
 
   steelDetailsOptions: any = {
-    caption: "SteelDetails Details",
+    caption: "Steel Details",
     addCallback: this.addSteelDetails,
     editCallback: this.editSteelDetails,
     copyCallback: this.copySteelDetails,
@@ -557,10 +559,6 @@ export class ElementComponent implements OnInit {
       {
         name: "Theoritical Quantity",
         index: "theoriticalQuantity"
-      },
-      {
-        name: "Actual Quantity",
-        index: "actualQuantity"
       },
       {
         name: "Unit",
@@ -580,6 +578,14 @@ export class ElementComponent implements OnInit {
       {
         name: "Mix Design",
         index: "mixDesignName"
+      },
+      {
+        name: "Theoritical Quantity",
+        index: "theoriticalQuantity"
+      },
+      {
+        name: "Unit",
+        index: "unit"
       },
       {
         name: "Weight",
